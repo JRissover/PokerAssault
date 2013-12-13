@@ -19,8 +19,7 @@ public class MainActivity extends Activity {
         WebSettings wSettings;
         wSettings = webView.getSettings();
         wSettings.setJavaScriptEnabled(true);
-        //webView.loadUrl("http://www.google.com");
-        webView.loadUrl("file:///android_asset/test.html");
+        webView.loadUrl("file:///android_asset/index.html");
     }
 
 
