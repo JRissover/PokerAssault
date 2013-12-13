@@ -1,0 +1,1 @@
+sprites go in this folder
