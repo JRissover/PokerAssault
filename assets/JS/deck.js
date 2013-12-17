@@ -25,20 +25,31 @@ Deck.prototype = {
 
 	draw: function(amount){
 
-		var hand = new Array();
-
 		if(this.order.length < amount){
+
 			this.shuffle();
 		}
 
-		for(var i = 0; i < amount; i++){
+		if(amount == 1){
 
-			hand.push(this.cards[this.order.pop()])
+			return this.cards[this.order.pop()];
 
 		}
+		else{
 
+			var hand = new Array();
 
-		return hand;
+			for(var i = 0; i < amount; i++){
+
+				hand.push(this.cards[this.order.pop()])
+
+			}
+			console.log(hand[0]);
+
+			return hand;
+		}
+
+		
 
 	},
 

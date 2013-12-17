@@ -12,36 +12,56 @@ var UPS = 30;
 var deck;
 var hand;
 
+var mainButton;
+var buttonLabel;
+
 init();
 
 function init() {
 
-        canvas = document.createElement( 'canvas' );
-        document.body.appendChild( canvas );
-        canvas.style.position = 'absolute';
-        canvas.style.top = '0px';
-        canvas.style.left = '0px';
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth ;
+    canvas = document.createElement( 'canvas' );
+    document.body.appendChild( canvas );
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0px';
+    canvas.style.left = '0px';
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth ;
 
-        stage = new createjs.Stage(canvas);
+    stage = new createjs.Stage(canvas);
 
-        console.log(stage);
+    context = canvas.getContext("2d");
+    
+    initGame();
 
-        context = canvas.getContext("2d");
-        
-        deck = new Deck();
-        deck.shuffle();
+    
+    window.addEventListener( 'resize', onWindowResize, false );
 
-        hand = deck.draw(5);
+    setInterval( function() { update();         } , 1000/UPS );
+    setInterval( function() { stage.update();   } , 1000/FPS ); 
+    //draw();
+}
 
-        //drawNewHand();
-        
-        window.addEventListener( 'resize', onWindowResize, false );
+function initGame() {
+    deck = new Deck();
+    deck.shuffle();
 
-        setInterval( function() { update();         } , 1000/UPS );
-        setInterval( function() { stage.update();   } , 1000/FPS ); 
-        //draw();
+    hand = new Array();
+
+    var mainButton = new createjs.Shape();
+    var g = mainButton.graphics;
+    g.beginFill("#FFF");
+    g.drawRoundRect(canvas.width * 0.775 , canvas.height * 0.75 , canvas.width  * 0.2 ,  canvas.height * 0.2 , 100 )
+    g.endFill();
+    stage.addChild(mainButton);
+    mainButton.on("mousedown", function(evt) {
+        drawNewHand();
+    });
+    
+    var buttonLabel = new createjs.Text("Draw", "20px Arial", "#000");
+    buttonLabel.textAlign = "center";
+    buttonLabel.x = canvas.width  * 0.8725;
+    buttonLabel.y = canvas.height * 0.83;
+    stage.addChild(buttonLabel);
 }
 
 function onWindowResize( event ) {
@@ -50,54 +70,65 @@ function onWindowResize( event ) {
         
 }
 function drawNewHand(){
-    stage.removeChild(hand[0].image);
-    stage.removeChild(hand[1].image);
-    stage.removeChild(hand[2].image);
-    stage.removeChild(hand[3].image);
-    stage.removeChild(hand[4].image);
+    
 
-    hand = deck.draw(5);
+    if(hand.length == 5){
+        
+        for(var i = 0; i < 5; i++){
+            //console.log(hand[i])
+
+            if(hand[i].hold){
+                console.log( hand[i].suit+" "+hand[i].value+ " : "  + " held");
+            }
+            else{
+
+               console.log( hand[i].suit+" "+hand[i].value+ " : "  + " not held");
+
+                stage.removeChild(hand[i].image);
+
+                hand[i] = deck.draw(1);
+                
+
+                hand[i].hold = false;
+
+                stage.addChild(hand[i].image);
+
+                hand[i].image.x = (canvas.width * 0.05) + (canvas.width * .15 * i);
+                hand[i].image.y = canvas.height * 0.75;
+                hand[i].image.scaleX = (canvas.width  * 0.1) / hand[i].image.image.naturalWidth;
+                hand[i].image.scaleY = (canvas.height * 0.2) / hand[i].image.image.naturalHeight;
 
 
-    hand[0].image.x = canvas.width * 0.05;
-    hand[0].image.y = canvas.height * 0.75;
-    hand[0].image.scaleX = (canvas.width  * 0.1) / hand[0].image.image.naturalWidth;
-    hand[0].image.scaleY = (canvas.height * 0.2) / hand[0].image.image.naturalHeight;
-   
-    stage.addChild(hand[0].image);
+            }
+        }
+    }
+    else{
 
-    hand[1].image.x = canvas.width * 0.20;
-    hand[1].image.y = canvas.height * 0.75;
-    hand[1].image.scaleX = (canvas.width  * 0.1) / hand[1].image.image.naturalWidth;
-    hand[1].image.scaleY = (canvas.height * 0.2) / hand[1].image.image.naturalHeight;
-    stage.addChild(hand[1].image);
+        hand = deck.draw(5);
 
-    hand[2].image.x = canvas.width * 0.35;
-    hand[2].image.y = canvas.height * 0.75;
-    hand[2].image.scaleX = (canvas.width  * 0.1) / hand[2].image.image.naturalWidth;
-    hand[2].image.scaleY = (canvas.height * 0.2) / hand[2].image.image.naturalHeight;
-    stage.addChild(hand[2].image);
+        for(var i = 0; i < 5; i++){
 
-    hand[3].image.x = canvas.width * 0.50;
-    hand[3].image.y = canvas.height * 0.75;
-    hand[3].image.scaleX = (canvas.width  * 0.1) / hand[3].image.image.naturalWidth;
-    hand[3].image.scaleY = (canvas.height * 0.2) / hand[3].image.image.naturalHeight;
-    stage.addChild(hand[3].image);
 
-    hand[4].image.x = canvas.width * 0.65;
-    hand[4].image.y = canvas.height * 0.75;
-    hand[4].image.scaleX = (canvas.width  * 0.1) / hand[4].image.image.naturalWidth;
-    hand[4].image.scaleY = (canvas.height * 0.2) / hand[4].image.image.naturalHeight;
-    stage.addChild(hand[4].image);
+            stage.addChild(hand[i].image);
+
+            hand[i].hold = false;
+
+            hand[i].image.x = (canvas.width * 0.05) + (canvas.width * .15 * i);
+            hand[i].image.y = canvas.height * 0.75;
+            hand[i].image.scaleX = (canvas.width  * 0.1) / hand[i].image.image.naturalWidth;
+            hand[i].image.scaleY = (canvas.height * 0.2) / hand[i].image.image.naturalHeight;
+
+
+        }
+
+    }
+
+
 }
 
 function update(){
 
         timer+=1;
 
-        if( timer%UPS == 0 )
-        {
-            drawNewHand();
-        }
 
 }
