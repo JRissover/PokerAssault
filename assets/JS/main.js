@@ -1,10 +1,17 @@
 //by: Jason Rissover
 
-
+var stage;
 var canvas;
 var context;
 
 var num = 0;
+
+var FPS = 30;
+var UPS = 30;
+
+var deck;
+
+
 
 
 init();
@@ -19,18 +26,22 @@ function init() {
         canvas.height = window.innerHeight;
         canvas.width = window.innerWidth ;
 
+        stage = new createjs.Stage(canvas);
+
+        console.log(stage);
+
         context = canvas.getContext("2d");
+        
+        deck = new Deck();
+        deck.shuffle();
+
         
 
         window.addEventListener( 'resize', onWindowResize, false );
 
-        var FPS = 30;
-        setInterval(
-                function() {
-                        update();
-                        draw();
-                }
-        , 1000/FPS);
+        setInterval( function() { update(); } , 1000/UPS );
+        setInterval( function() { draw();   } , 1000/FPS );
+        //draw();
 }
 
 function onWindowResize( event ) {
@@ -40,13 +51,21 @@ function onWindowResize( event ) {
 }
 
 function draw(){
-        context.fillStyle="#FFFFFF";
-        context.fillRect(0,0,canvas.width , canvas.height);
+        stage.update();
+       // context.fillStyle="#FFFFFF";
+        //context.fillRect(0,0,canvas.width , canvas.height);
 
-        context.fillStyle = "#000";
-        context.fillText(num, 10, 10);
+
+       
+        //console.log(hand);
+        // context.drawImage(hand[0].image , 0,0);
+
+
 }
 
 function update(){
-        num+=1;
+        var hand = deck.draw(5);
+
+        stage.addChild(hand[0].image);
+
 }
