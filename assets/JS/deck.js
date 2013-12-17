@@ -15,6 +15,8 @@ Deck = function() {
 		this.order.push(i);
 	}
 
+	
+
 }
 
 Deck.prototype = {
@@ -41,8 +43,6 @@ Deck.prototype = {
 	},
 
 	shuffle: function(){
-
-		console.log("shuffling");
 
 		if(this.cards.length != this.order.length){
 			this.order = new Array();
