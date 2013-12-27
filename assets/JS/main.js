@@ -78,25 +78,25 @@ function drawNewHand(){
             //console.log(hand[i])
 
             if(hand[i].hold){
-                console.log( hand[i].suit+" "+hand[i].value+ " : "  + " held");
+                //console.log( hand[i].suit+" "+hand[i].value+ " : "  + " held");
             }
             else{
 
-               console.log( hand[i].suit+" "+hand[i].value+ " : "  + " not held");
+               //console.log( hand[i].suit+" "+hand[i].value+ " : "  + " not held");
 
-                stage.removeChild(hand[i].image);
+                stage.removeChild(hand[i]);
 
                 hand[i] = deck.draw(1);
                 
 
                 hand[i].hold = false;
 
-                stage.addChild(hand[i].image);
+                stage.addChild(hand[i]);
 
-                hand[i].image.x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-                hand[i].image.y = canvas.height * 0.75;
-                hand[i].image.scaleX = (canvas.width  * 0.1) / hand[i].image.image.naturalWidth;
-                hand[i].image.scaleY = (canvas.height * 0.2) / hand[i].image.image.naturalHeight;
+                hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
+                hand[i].y = canvas.height * 0.75;
+                hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
+                hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
 
 
             }
@@ -109,14 +109,14 @@ function drawNewHand(){
         for(var i = 0; i < 5; i++){
 
 
-            stage.addChild(hand[i].image);
+            stage.addChild(hand[i]);
 
             hand[i].hold = false;
 
-            hand[i].image.x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-            hand[i].image.y = canvas.height * 0.75;
-            hand[i].image.scaleX = (canvas.width  * 0.1) / hand[i].image.image.naturalWidth;
-            hand[i].image.scaleY = (canvas.height * 0.2) / hand[i].image.image.naturalHeight;
+            hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
+            hand[i].y = canvas.height * 0.75;
+            hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
+            hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
 
 
         }
