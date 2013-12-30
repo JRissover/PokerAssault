@@ -44,7 +44,7 @@ Deck.prototype = {
 				hand.push(this.cards[this.order.pop()])
 
 			}
-			console.log(hand[0]);
+			//console.log(hand[0]);
 
 			return hand;
 		}

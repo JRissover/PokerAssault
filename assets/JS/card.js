@@ -3,9 +3,7 @@
  *
  */
 
-Card = function(value , suit) {
-
-
+Card = function(value , suit, spawn) {
 
         createjs.Bitmap.call( this , "resources/sprites/classicCards/"+suit+"/"+value+".png");
 
@@ -15,12 +13,27 @@ Card = function(value , suit) {
         this.suit = suit;
         //this.image = new createjs.Bitmap("resources/sprites/classicCards/"+suit+"/"+value+".png");
         //this.image.card = this;
-        this.spawn = null;
+        this.spawn = spawn;
         this.hold = false;
 
         this.on("mousedown", function(evt) {
                 //this.card.hold = !this.card.hold;
-                this.hold = !this.hold;
+
+                if(buttonLabel.text == "Re Draw"){
+
+                        this.hold = !this.hold;
+
+                        if(this.hold){
+                             this.y = canvas.height * 0.735;   
+                        }
+                        else{
+                             this.y = canvas.height * 0.75;   
+                        }
+
+                }
+
+                
+
                 //console.log(suit+" "+value+ " : " + this.hold);
         });
 }
