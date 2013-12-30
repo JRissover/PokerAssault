@@ -101,7 +101,7 @@ function mainButtonPress(){
 
         for(var i = 0; i < 5; i++){
             
-            //stage.removeChild(hand[i]);
+            stage.removeChild(hand[i]);
         }
 
         buttonLabel.text = "Draw";
@@ -137,7 +137,7 @@ function spawnHand(){
 
     // optional redraw of sorted cards
 
-    ///*
+    /*
     for(var i = 0; i < 5; i++){
 
         stage.removeChild(hand[i]);
@@ -151,7 +151,7 @@ function spawnHand(){
         hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
         hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
     }
-    //*/
+    */
 
     //console.log(hand);
 
@@ -199,17 +199,13 @@ function spawnHand(){
             if(last == cur){
                 lengthOne++;
             }
-            else{
-               on = 0;
-            }
+           
         }
         else if(on ==2){
             if(last == cur){
                 lengthTwo++;
             }
-            else{
-                on = 0;
-            }
+           
         }
         else{
             if(lengthOne > 1){

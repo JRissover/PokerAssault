@@ -8,8 +8,6 @@ var timer = 0;
 
 var FPS = 30;
 
-var deck;
-var hand;
 
 var mainButton;
 var buttonLabel;
@@ -35,7 +33,7 @@ function init() {
     
     window.addEventListener( 'resize', onWindowResize, false );
 
-    setInterval( function() { update();         } , 1000/UPS );
+    
     setInterval( function() { stage.update();   } , 1000/FPS ); 
     //draw();
 }
