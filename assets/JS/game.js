@@ -199,7 +199,10 @@ function spawnHand(){
             if(last == cur){
                 lengthOne++;
             }
-           
+            else if(lengthOne > 1){
+                lengthTwo = 1;
+                on = 2;
+            }
         }
         else if(on ==2){
             if(last == cur){
@@ -208,14 +211,10 @@ function spawnHand(){
            
         }
         else{
-            if(lengthOne > 1){
-                lengthTwo = 1;
-                on = 2;
-            }
-            else{
-                lengthOne = 1;
-                on = 1;
-            }
+           
+            lengthOne = 1;
+            on = 1;
+           
             
         }
 
