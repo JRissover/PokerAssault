@@ -8,6 +8,14 @@ var hand;
 var mainButton;
 var buttonLabel;
 
+var background;
+var battleground;
+
+var leftArrow;
+var rightArrow;
+
+var scroll = 0;
+
 
 
 function initGame() {
@@ -15,6 +23,22 @@ function initGame() {
     deck.shuffle();
 
     hand = new Array();
+
+    
+
+    //background = new createjs.Bitmap("resources/sprites/Landscape.jpg");
+    //background.onload = backgroundLoad;
+
+    var backgroundImage = new Image();
+    backgroundImage.src = "resources/sprites/Landscape.jpg"
+    backgroundImage.onload = backgroundLoad;
+
+    battleground = new createjs.Container();
+    stage.addChild(battleground);
+
+    var arrowImage = new Image();
+    arrowImage.src = "resources/sprites/arrow.png"
+    arrowImage.onload = loadArrows;
 
     mainButton = new createjs.Shape();
     var g = mainButton.graphics;
@@ -35,11 +59,53 @@ function initGame() {
     setInterval( function() { update();         } , 1000/UPS );
 }
 
-function onWindowResize( event ) {
-        canvas.height = window.innerHeight ;
-        canvas.width = window.innerWidth ;
-        
+function backgroundLoad(e){
+    background = new createjs.Bitmap(e.target);
+
+    background.scaleX = (canvas.width  * 3.0) / background.image.naturalWidth;
+    background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
+
+    battleground.addChild(background);
+
+    background.x = 0;
+    background.y = 0;
 }
+
+function loadArrows(e){
+
+    leftArrow = new createjs.Bitmap(e.target);
+    rightArrow = new createjs.Bitmap(e.target);
+
+    rightArrow.scaleX = (canvas.width  * 0.075) / rightArrow.image.naturalWidth;
+    rightArrow.scaleY = (canvas.height * 0.5) / rightArrow.image.naturalHeight;
+
+    leftArrow.scaleX = -(canvas.width  * 0.075) / leftArrow.image.naturalWidth;
+    leftArrow.scaleY = (canvas.height * 0.5) / leftArrow.image.naturalHeight;
+
+    rightArrow.x = canvas.width  * 0.9;
+    rightArrow.y = canvas.height * 0.1;
+
+    leftArrow.x = canvas.width  * 0.1;
+    leftArrow.y = canvas.height * 0.1;
+
+    leftArrow.on("mousedown", function(evt) {
+       scroll = 5;
+    });
+    leftArrow.on("pressup", function(evt) {
+       scroll = 0;
+    });
+
+    rightArrow.on("mousedown", function(evt) {
+        scroll = -5;
+    });
+    rightArrow.on("pressup", function(evt) {
+        scroll = 0;
+    });
+
+    stage.addChild(rightArrow);
+    stage.addChild(leftArrow);
+}
+
 function mainButtonPress(){
     if(buttonLabel.text == "Draw"){
 
@@ -276,8 +342,20 @@ function spawnHand(){
 
 
 function update(){
+        
+    timer+=1;
 
-        timer+=1;
-
-
+    if(scroll !=0){
+        if(scroll >0){
+            if(battleground.x < 0){
+                 battleground.x += scroll;
+            }
+        }
+        else{
+            if(battleground.x > - canvas.width  * 2.0){
+                battleground.x += scroll;
+            }
+        }
+        
+    }
 }
