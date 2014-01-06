@@ -11,23 +11,23 @@ var buttonLabel;
 var background;
 var battleground;
 
-var leftArrow;
-var rightArrow;
+//var leftArrow;
+//var rightArrow;
 
 var scroll = 0;
+var lastPos = 0;
+var scrollAccel = 0;
 
 
 
 function initGame() {
+
+    stage.removeAllChildren();
+
     deck = new Deck();
     deck.shuffle();
 
     hand = new Array();
-
-    
-
-    //background = new createjs.Bitmap("resources/sprites/Landscape.jpg");
-    //background.onload = backgroundLoad;
 
     var backgroundImage = new Image();
     backgroundImage.src = "resources/sprites/Landscape.jpg"
@@ -36,9 +36,9 @@ function initGame() {
     battleground = new createjs.Container();
     stage.addChild(battleground);
 
-    var arrowImage = new Image();
-    arrowImage.src = "resources/sprites/arrow.png"
-    arrowImage.onload = loadArrows;
+    //var arrowImage = new Image();
+   // arrowImage.src = "resources/sprites/arrow.png"
+    //arrowImage.onload = loadArrows;
 
     mainButton = new createjs.Shape();
     var g = mainButton.graphics;
@@ -69,8 +69,26 @@ function backgroundLoad(e){
 
     background.x = 0;
     background.y = 0;
+
+    background.on("pressmove", function(evt) {
+
+        var dx = evt.stageX - lastPos;
+
+        scrollAccel = dx;
+
+        scroll += scrollAccel / 3.0;
+
+        lastPos = evt.stageX;
+    });
+    background.on("mousedown", function(evt) {
+        lastPos = evt.stageX;
+    });
+    background.on("pressup", function(evt) {
+        scrollAccel = 0;
+    });
 }
 
+/*
 function loadArrows(e){
 
     leftArrow = new createjs.Bitmap(e.target);
@@ -105,6 +123,7 @@ function loadArrows(e){
     stage.addChild(rightArrow);
     stage.addChild(leftArrow);
 }
+*/
 
 function mainButtonPress(){
     if(buttonLabel.text == "Draw"){
@@ -342,20 +361,36 @@ function spawnHand(){
 
 
 function update(){
-        
+
     timer+=1;
 
     if(scroll !=0){
         if(scroll >0){
             if(battleground.x < 0){
-                 battleground.x += scroll;
+                if(battleground.x + scroll < 0){
+                    battleground.x += scroll;
+                }
+                else{
+                    battleground.x = 0;
+                    scroll = 0;
+                }
             }
         }
         else{
             if(battleground.x > - canvas.width  * 2.0){
-                battleground.x += scroll;
+                if(battleground.x + scroll > - canvas.width  * 2.0){
+                    battleground.x += scroll;
+                }
+                else{
+                    battleground.x = -canvas.width  * 2.0;
+                    scroll = 0;
+                }
             }
         }
-        
+        scroll *= 0.8;
+        if(Math.abs(scroll) <= 0.1){
+            scroll = 0;
+        }
     }
+    
 }
