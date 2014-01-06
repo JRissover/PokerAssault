@@ -18,11 +18,14 @@ var scroll = 0;
 var lastPos = 0;
 var scrollAccel = 0;
 
+var grantSpriteSheet;
+
 
 
 function initGame() {
 
     stage.removeAllChildren();
+    loadSprites();
 
     deck = new Deck();
     deck.shuffle();
@@ -56,7 +59,26 @@ function initGame() {
     buttonLabel.y = canvas.height * 0.83;
     stage.addChild(buttonLabel);
 
+
     setInterval( function() { update();         } , 1000/UPS );
+}
+
+function loadSprites(){
+    grantSpriteSheet = new createjs.SpriteSheet({
+        "animations":
+        {
+            "run": [0, 25, "run"],
+            "jump": [26, 63, "run"]},
+            "images": ["resources/sprites/runningGrant.png"],
+            "frames":
+                {
+                    "height": 292.5,
+                    "width":165.75,
+                    "regX": 0,
+                    "regY": 0,
+                    "count": 64
+                }
+    });
 }
 
 function backgroundLoad(e){
@@ -357,6 +379,16 @@ function spawnHand(){
         console.log("five of a kind");
     }
     */
+
+    var grant = new createjs.Sprite(grantSpriteSheet, "run");
+    grant.scaleX = (canvas.width  * 0.1) / grant.spriteSheet._frameWidth;
+    grant.scaleY = (canvas.height  * 0.2) / grant.spriteSheet._frameHeight;
+    console.log(grant);
+    grant.y = canvas.height  * 0.4;
+    // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+    battleground.addChild(grant);
+    //createjs.Ticker.setFPS(30);
+    //createjs.Ticker.addEventListener("tick", stage);
 }
 
 
