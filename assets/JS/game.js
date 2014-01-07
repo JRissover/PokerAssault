@@ -20,6 +20,10 @@ var scrollAccel = 0;
 
 var grantSpriteSheet;
 
+var units;
+var enemies;
+var updateID;
+
 
 
 function initGame() {
@@ -31,6 +35,8 @@ function initGame() {
     deck.shuffle();
 
     hand = new Array();
+    units = new Array();
+    enemies = new Array();
 
     var backgroundImage = new Image();
     backgroundImage.src = "resources/sprites/Landscape.jpg"
@@ -60,7 +66,7 @@ function initGame() {
     stage.addChild(buttonLabel);
 
 
-    setInterval( function() { update();         } , 1000/UPS );
+    updateID = setInterval( update , 1000/UPS );
 }
 
 function loadSprites(){
@@ -68,14 +74,14 @@ function loadSprites(){
         "animations":
         {
             "run": [0, 25, "run"],
-            "jump": [26, 63, "run"]},
+            "attack": [26, 63, "run"]},
             "images": ["resources/sprites/runningGrant.png"],
             "frames":
                 {
                     "height": 292.5,
                     "width":165.75,
-                    "regX": 0,
-                    "regY": 0,
+                    "regX": 82.875,
+                    "regY": 292.5,
                     "count": 64
                 }
     });
@@ -380,21 +386,31 @@ function spawnHand(){
     }
     */
 
-    var grant = new Unit(grantSpriteSheet);
-    grant.scaleX = (canvas.width  * 0.1) / grant.spriteSheet._frameWidth;
-    grant.scaleY = (canvas.height  * 0.2) / grant.spriteSheet._frameHeight;
-    console.log(grant);
-    grant.y = canvas.height * 0.4;
+
+    var unit = new Unit(hand[0].spawn.spriteSheet,"run",hand[0].spawn.health , hand[0].spawn.speed , hand[0].spawn.damage , hand[0].spawn.range, hand[0].spawn.pwidth , hand[0].spawn.pheight);
+    unit.y = canvas.height * 0.6;
+    unit.x = canvas.height * 0.1;
     // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-    battleground.addChild(grant);
+    battleground.addChild(unit);
+    units.push(unit);
     //createjs.Ticker.setFPS(30);
     //createjs.Ticker.addEventListener("tick", stage);
+
+    var enemy = new Unit(grantSpriteSheet, "run", 1,-1,1);
+    enemy.scaleX = -enemy.scaleX;
+    enemy.y = canvas.height * 0.6;
+    enemy.x = canvas.height * 2;
+    // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+    battleground.addChild(enemy);
+    enemies.push(enemy);
 }
 
 
 function update(){
 
     timer+=1;
+
+    // adjusts scroll
 
     if(scroll !=0){
         if(scroll >0){
@@ -424,5 +440,79 @@ function update(){
             scroll = 0;
         }
     }
+
+    var inRange = false;
+
+    for(var i = 0; i < units.length; i++){
+
+        // first check if dead
+        if(units[i].health <= 0){
+            
+            battleground.removeChild(units[i]);
+            units.splice(i,1);
+            i--;
+        }
+        else{
+
+            if(units[i].currentAnimation == "run"){
+
+                inRange = false;
+                var dx;
+                for(var j = 0; j < enemies.length; j++){
+                    dx = Math.abs(enemies[j].x -units[i].x);
+                    if(dx < units[i].range){
+                        inRange = true;
+                    }
+                }
+
+                if(inRange){
+                    units[i].gotoAndPlay("attack");
+                }
+                else{
+                    units[i].x += units[i].speed;
+                }
+            }
+        }
+
+        
+        //console.log( units[i]);
+    }
+
+    if(enemies.length == 0){
+        //clearInterval(updateID);
+        //initMenu();
+    }
+   
+    for(var i = 0; i < enemies.length; i++){
+        // first check if dead
+        if(enemies[i].health <= 0){
+            
+            battleground.removeChild(enemies[i]);
+            enemies.splice(i,1);
+            i--;
+        }
+        else{
+            if(enemies[i].currentAnimation == "run"){
+
+                inRange = false;
+                var dx;
+                for(var j = 0; j < units.length; j++){
+                    dx = Math.abs(units[j].x -enemies[i].x);
+                    if(dx < units[i].range){
+                        inRange = true;
+                    }
+                }
+
+                if(inRange){
+                    enemies[i].gotoAndPlay("attack");
+                }
+                else{
+                    enemies[i].x += enemies[i].speed;
+                }
+            }
+            
+        }
+    }
+    
     
 }

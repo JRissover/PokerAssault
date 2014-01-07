@@ -3,7 +3,7 @@
  *
  */
 
-Card = function(value , suit, spawn) {
+Card = function(value , suit, unit , pwidth, pheight) {
 
         createjs.Bitmap.call( this , "resources/sprites/classicCards/"+suit+"/"+value+".png");
 
@@ -13,7 +13,11 @@ Card = function(value , suit, spawn) {
         this.suit = suit;
         //this.image = new createjs.Bitmap("resources/sprites/classicCards/"+suit+"/"+value+".png");
         //this.image.card = this;
-        this.spawn = spawn;
+        this.spawn = unit || new Unit(grantSpriteSheet, "run");
+
+
+        //this.spawn.regX = this.spawn.scaleX/2.0;
+
         this.hold = false;
 
         this.on("mousedown", function(evt) {
