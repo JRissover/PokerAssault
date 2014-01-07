@@ -272,10 +272,10 @@ function spawnHand(){
 
     //check flush
 
-    var flush = true;
+    var flush = 1;
     for(var i = 1; i < 5; i++){
         if(hand[i].suit != hand[0].suit){
-            flush = false;
+            flush = 0;
         }
     }
 
@@ -284,12 +284,15 @@ function spawnHand(){
     }
 
     //check straight
+    var straight = 0;
 
     if( hand[0].value + 4 == hand[4].value &&
         hand[1].value + 3 == hand[4].value &&
         hand[2].value + 2 == hand[4].value &&
         hand[3].value + 1 == hand[4].value){
+
         console.log("straight");
+        straight = 1;
     }
 
 
@@ -387,20 +390,43 @@ function spawnHand(){
     */
 
 
-    var unit = new Unit(hand[0].spawn.spriteSheet,"run",hand[0].spawn.health , hand[0].spawn.speed , hand[0].spawn.damage , hand[0].spawn.range, hand[0].spawn.pwidth , hand[0].spawn.pheight);
-    unit.y = canvas.height * 0.6;
-    unit.x = canvas.height * 0.1;
-    // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
-    battleground.addChild(unit);
-    units.push(unit);
-    //createjs.Ticker.setFPS(30);
-    //createjs.Ticker.addEventListener("tick", stage);
 
-    var enemy = new Unit(grantSpriteSheet, "run", 1,-1,1);
+    var amount = lengthOne;
+    if(lengthTwo >1){
+        amount += lengthTwo;
+    }
+
+
+    var health = amount + (10*straight) + (10*flush); 
+    var speed = lengthOne + lengthTwo; 
+    var damage = lengthOne + lengthTwo + (10*straight) + (10*flush); 
+    var range = (canvas.width  * 0.075);
+    var attackSpeed = 1000;
+    var pwidth = 0.1 + (.1*straight) + (.1*flush); 
+    var pheight= 0.2 + (.2*straight) + (.2*flush);
+
+    console.log("Amount = " + amount);
+
+    for(var i = 0; i < amount; i++){
+        setTimeout(function(){
+            //var unit = new Unit(hand[0].spawn.spriteSheet,"run",hand[0].spawn.health , hand[0].spawn.speed , hand[0].spawn.damage , hand[0].spawn.range, hand[0].spawn.attackSpeed, hand[0].spawn.pwidth , hand[0].spawn.pheight);
+            var unit = new Unit(hand[0].spawn.spriteSheet,"run",  health , speed , damage , range , attackSpeed, pwidth , pheight);
+
+            unit.y = canvas.height * 0.6;
+            unit.x = canvas.height * 0.1;
+
+            battleground.addChild(unit);
+            units.push(unit);
+        }, 500*i);
+    }
+
+    // basic enemy opposition
+    // temporary
+    var enemy = new Unit(grantSpriteSheet, "run", 3 , -1 , 1 , (canvas.width  * 0.075) , 1000);
     enemy.scaleX = -enemy.scaleX;
     enemy.y = canvas.height * 0.6;
     enemy.x = canvas.height * 2;
-    // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
+
     battleground.addChild(enemy);
     enemies.push(enemy);
 }
@@ -458,15 +484,26 @@ function update(){
 
                 inRange = false;
                 var dx;
+                var target;
+                var min = 1000000; 
                 for(var j = 0; j < enemies.length; j++){
                     dx = Math.abs(enemies[j].x -units[i].x);
                     if(dx < units[i].range){
-                        inRange = true;
+                       inRange = true;
+                        if(dx < min){
+                            min = dx;
+                            target = enemies[j];
+                        }
                     }
                 }
 
                 if(inRange){
+                    var attacker = units[i];
+                    
                     units[i].gotoAndPlay("attack");
+                    setTimeout(function(){
+                        target.health -= attacker.damage;
+                    },units[i].attackSpeed);
                 }
                 else{
                     units[i].x += units[i].speed;
@@ -496,15 +533,26 @@ function update(){
 
                 inRange = false;
                 var dx;
+                var target;
+                var min = 1000000;
                 for(var j = 0; j < units.length; j++){
                     dx = Math.abs(units[j].x -enemies[i].x);
-                    if(dx < units[i].range){
+                    if(dx < enemies[i].range){
                         inRange = true;
+                        if(dx < min){
+                            min = dx;
+                            target = units[j];
+                        }
                     }
                 }
 
                 if(inRange){
+                    var attacker = enemies[i];
+                    
                     enemies[i].gotoAndPlay("attack");
+                    setTimeout(function(){
+                        target.health -= attacker.damage;
+                    },enemies[i].attackSpeed);
                 }
                 else{
                     enemies[i].x += enemies[i].speed;
