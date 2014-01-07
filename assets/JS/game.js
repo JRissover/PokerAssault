@@ -380,11 +380,11 @@ function spawnHand(){
     }
     */
 
-    var grant = new createjs.Sprite(grantSpriteSheet, "run");
+    var grant = new Unit(grantSpriteSheet);
     grant.scaleX = (canvas.width  * 0.1) / grant.spriteSheet._frameWidth;
     grant.scaleY = (canvas.height  * 0.2) / grant.spriteSheet._frameHeight;
     console.log(grant);
-    grant.y = canvas.height  * 0.4;
+    grant.y = canvas.height * 0.4;
     // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
     battleground.addChild(grant);
     //createjs.Ticker.setFPS(30);
