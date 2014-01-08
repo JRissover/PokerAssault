@@ -24,10 +24,6 @@ var units;
 var enemies;
 var updateID;
 
-var buttonTimer = 0;
-var buttonTimeOut = 10;
-
-
 function initGame() {
 
 
@@ -48,21 +44,15 @@ function initGame() {
     battleground = new createjs.Container();
     stage.addChild(battleground);
 
-    //var arrowImage = new Image();
-   // arrowImage.src = "resources/sprites/arrow.png"
-    //arrowImage.onload = loadArrows;
-
     mainButton = new createjs.Shape();
     var g = mainButton.graphics;
     g.beginFill("#FFF");
     g.drawRoundRect(canvas.width * 0.775 , canvas.height * 0.75 , canvas.width  * 0.2 ,  canvas.height * 0.2 , 100 )
     g.endFill();
     stage.addChild(mainButton);
-    mainButton.on("pressup", function(evt) {
 
-        //initMenu();
-        if(buttonTimer >= buttonTimeOut){
-            buttonTimer=0;
+    mainButton.on("mousedown", function(evt) {
+        if((touch && evt.pointerID == 0)|| !touch){
             mainButtonPress();
         }
         
@@ -443,13 +433,6 @@ function spawnHand(){
 
 
 function update(){
-    
-
-    if(buttonTimer <= buttonTimeOut){
-        buttonTimer+=1;
-    }
-
-    
 
     // adjusts scroll
 

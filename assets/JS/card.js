@@ -24,8 +24,9 @@ Card = function(value , suit, unit , pwidth, pheight) {
                 //this.card.hold = !this.card.hold;
 
                 if(buttonLabel.text == "Re Draw"){
-                    if(buttonTimer >= buttonTimeOut){
-                        buttonTimer=0;
+
+                    if((touch && evt.pointerID == 0)|| !touch){
+                        
                         this.hold = !this.hold;
 
                         if(this.hold){

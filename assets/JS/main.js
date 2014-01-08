@@ -7,6 +7,7 @@ var context;
 var timer = 0;
 
 var FPS = 30;
+var touch;
 
 
 var mainButton;
@@ -25,7 +26,11 @@ function init() {
     canvas.width = window.innerWidth ;
 
     stage = new createjs.Stage(canvas);
-    createjs.Touch.enable(stage,true);
+
+    touch =  createjs.Touch.isSupported();
+    if(touch){
+        createjs.Touch.enable(stage,true);
+    }
 
     context = canvas.getContext("2d");
     
