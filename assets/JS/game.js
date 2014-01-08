@@ -11,14 +11,9 @@ var buttonLabel;
 var background;
 var battleground;
 
-//var leftArrow;
-//var rightArrow;
-
 var scroll = 0;
 var lastPos = 0;
 var scrollAccel = 0;
-
-var grantSpriteSheet;
 
 var units;
 var enemies;
@@ -28,7 +23,9 @@ function initGame() {
 
 
     stage.removeAllChildren();
-    loadSprites();
+
+    battleground = new createjs.Container();
+    stage.addChild(battleground);
 
     deck = new Deck();
     deck.shuffle();
@@ -37,12 +34,29 @@ function initGame() {
     units = new Array();
     enemies = new Array();
 
-    var backgroundImage = new Image();
-    backgroundImage.src = "resources/sprites/Landscape.jpg"
-    backgroundImage.onload = backgroundLoad;
+    background = new createjs.Bitmap(loader.getResult("landscape"));
+    background.scaleX = (canvas.width  * 3.0) / background.image.naturalWidth;
+    background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
+    battleground.addChild(background);
 
-    battleground = new createjs.Container();
-    stage.addChild(battleground);
+    background.on("pressmove", function(evt) {
+
+        var dx = evt.stageX - lastPos;
+
+        scrollAccel = dx;
+
+        scroll += scrollAccel / 3.0;
+
+        lastPos = evt.stageX;
+    });
+    background.on("mousedown", function(evt) {
+        lastPos = evt.stageX;
+    });
+    background.on("pressup", function(evt) {
+        scrollAccel = 0;
+    });
+
+    
 
     mainButton = new createjs.Shape();
     var g = mainButton.graphics;
@@ -68,52 +82,6 @@ function initGame() {
     updateID = setInterval( update , 1000/UPS );
 }
 
-function loadSprites(){
-    grantSpriteSheet = new createjs.SpriteSheet({
-        "animations":
-        {
-            "run": [0, 25, "run"],
-            "attack": [26, 63, "run"]},
-            "images": ["resources/sprites/runningGrant.png"],
-            "frames":
-                {
-                    "height": 292.5,
-                    "width":165.75,
-                    "regX": 82.875,
-                    "regY": 292.5,
-                    "count": 64
-                }
-    });
-}
-
-function backgroundLoad(e){
-    background = new createjs.Bitmap(e.target);
-
-    background.scaleX = (canvas.width  * 3.0) / background.image.naturalWidth;
-    background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
-
-    battleground.addChild(background);
-
-    background.x = 0;
-    background.y = 0;
-
-    background.on("pressmove", function(evt) {
-
-        var dx = evt.stageX - lastPos;
-
-        scrollAccel = dx;
-
-        scroll += scrollAccel / 3.0;
-
-        lastPos = evt.stageX;
-    });
-    background.on("mousedown", function(evt) {
-        lastPos = evt.stageX;
-    });
-    background.on("pressup", function(evt) {
-        scrollAccel = 0;
-    });
-}
 
 /*
 function loadArrows(e){
@@ -422,7 +390,7 @@ function spawnHand(){
 
     // basic enemy opposition
     // temporary
-    var enemy = new Unit(grantSpriteSheet, "run", 3 , -1 , 1 , (canvas.width  * 0.075) , 1000);
+    var enemy = new Unit(spriteSheets["grantSpriteSheet"], "run", 3 , -1 , 1 , (canvas.width  * 0.075) , 1000);
     enemy.scaleX = -enemy.scaleX;
     enemy.y = canvas.height * 0.6;
     enemy.x = canvas.height * 2;

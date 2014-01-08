@@ -13,6 +13,10 @@ var touch;
 var mainButton;
 var buttonLabel;
 
+var loader;
+
+var spriteSheets;
+
 init();
 
 function init() {
@@ -35,11 +39,10 @@ function init() {
     context = canvas.getContext("2d");
     
     //initGame();
-    initMenu();
+    //initMenu();
 
     
-    //window.addEventListener( 'resize', onWindowResize, false );
-
+    loadAssets();
     
     setInterval( function() { stage.update();   } , 1000/FPS ); 
     //draw();
@@ -105,9 +108,3 @@ function initMenu(){
 }
 
 
-
-function onWindowResize( event ) {
-        canvas.height = window.innerHeight ;
-        canvas.width = window.innerWidth ;
-        
-}
