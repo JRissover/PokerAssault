@@ -24,9 +24,12 @@ var units;
 var enemies;
 var updateID;
 
+var buttonTimer = 0;
+var buttonTimeOut = 10;
 
 
 function initGame() {
+
 
     stage.removeAllChildren();
     loadSprites();
@@ -55,8 +58,14 @@ function initGame() {
     g.drawRoundRect(canvas.width * 0.775 , canvas.height * 0.75 , canvas.width  * 0.2 ,  canvas.height * 0.2 , 100 )
     g.endFill();
     stage.addChild(mainButton);
-    mainButton.on("mousedown", function(evt) {
-        mainButtonPress();
+    mainButton.on("pressup", function(evt) {
+
+        //initMenu();
+        if(buttonTimer >= buttonTimeOut){
+            buttonTimer=0;
+            mainButtonPress();
+        }
+        
     });
     
     buttonLabel = new createjs.Text("Draw", "20px Arial", "#000");
@@ -154,28 +163,8 @@ function loadArrows(e){
 */
 
 function mainButtonPress(){
-    if(buttonLabel.text == "Draw"){
-
-        hand = deck.draw(5);
-
-        for(var i = 0; i < 5; i++){
-
-
-            stage.addChild(hand[i]);
-
-            hand[i].hold = false;
-
-            hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-            hand[i].y = canvas.height * 0.75;
-            hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
-            hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
-
-
-        }
-
-        buttonLabel.text = "Re Draw";
-    }
-    else if(buttonLabel.text == "Re Draw"){
+    
+    if(buttonLabel.text == "Re Draw"){
         
         for(var i = 0; i < 5; i++){
             //console.log(hand[i])
@@ -208,6 +197,27 @@ function mainButtonPress(){
 
         buttonLabel.text = "Deploy";
     }
+    else if(buttonLabel.text == "Draw"){
+
+        hand = deck.draw(5);
+
+        for(var i = 0; i < 5; i++){
+
+
+            stage.addChild(hand[i]);
+
+            hand[i].hold = false;
+
+            hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
+            hand[i].y = canvas.height * 0.75;
+            hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
+            hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
+
+
+        }
+
+        buttonLabel.text = "Re Draw";
+    }
     else if(buttonLabel.text == "Deploy"){
 
         spawnHand();
@@ -224,7 +234,7 @@ function mainButtonPress(){
 }
 
 function spawnHand(){
-    console.log("spawning");
+    //console.log("spawning");
 
     //sort hand
 
@@ -405,7 +415,7 @@ function spawnHand(){
     var pwidth = 0.1 + (.1*straight) + (.1*flush); 
     var pheight= 0.2 + (.2*straight) + (.2*flush);
 
-    console.log("Amount = " + amount);
+    //console.log("Amount = " + amount);
 
     for(var i = 0; i < amount; i++){
         setTimeout(function(){
@@ -433,8 +443,13 @@ function spawnHand(){
 
 
 function update(){
+    
 
-    timer+=1;
+    if(buttonTimer <= buttonTimeOut){
+        buttonTimer+=1;
+    }
+
+    
 
     // adjusts scroll
 

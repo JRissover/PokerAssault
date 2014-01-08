@@ -25,7 +25,7 @@ function init() {
     canvas.width = window.innerWidth ;
 
     stage = new createjs.Stage(canvas);
-    createjs.Touch.enable(stage);
+    createjs.Touch.enable(stage,true);
 
     context = canvas.getContext("2d");
     
@@ -33,7 +33,7 @@ function init() {
     initMenu();
 
     
-    window.addEventListener( 'resize', onWindowResize, false );
+    //window.addEventListener( 'resize', onWindowResize, false );
 
     
     setInterval( function() { stage.update();   } , 1000/FPS ); 
@@ -55,7 +55,7 @@ function initMenu(){
         initGame();
     });
 
-    var buttonLabel = new createjs.Text("Start Game", "40px Arial", "#000");
+    var buttonLabel = new createjs.Text("Start Game", "30px Arial", "#000");
     buttonLabel.textAlign = "center";
     buttonLabel.x = canvas.width  * 0.5;
     buttonLabel.y = canvas.height * 0.425;
@@ -70,10 +70,10 @@ function initMenu(){
     g.endFill();
     stage.addChild(editDeckButton);
     editDeckButton.on("mousedown", function(evt) {
-        console.log("todo deck editor");
+        //console.log("todo deck editor");
     });
 
-    var editDeckButtonLabel = new createjs.Text("Edit Deck", "40px Arial", "#000");
+    var editDeckButtonLabel = new createjs.Text("Edit Deck", "30px Arial", "#000");
     editDeckButtonLabel.textAlign = "center";
     editDeckButtonLabel.x = canvas.width  * 0.5;
     editDeckButtonLabel.y = canvas.height * 0.625;
@@ -88,10 +88,10 @@ function initMenu(){
     g.endFill();
     stage.addChild(exitGameButton);
     exitGameButton.on("mousedown", function(evt) {
-        console.log("todo exit button");
+        //console.log("todo exit button");
     });
 
-    var exitGameButtonLabel = new createjs.Text("Exit Game", "40px Arial", "#000");
+    var exitGameButtonLabel = new createjs.Text("Exit Game", "30px Arial", "#000");
     exitGameButtonLabel.textAlign = "center";
     exitGameButtonLabel.x = canvas.width  * 0.5;
     exitGameButtonLabel.y = canvas.height * 0.825;

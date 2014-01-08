@@ -2,6 +2,7 @@ package com.example.pokerassault;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.webkit.*;
 
@@ -19,6 +20,17 @@ public class MainActivity extends Activity {
         WebSettings wSettings;
         wSettings = webView.getSettings();
         wSettings.setJavaScriptEnabled(true);
+        wSettings.setAllowContentAccess(true);
+        wSettings.setAllowUniversalAccessFromFileURLs(true);
+         
+        webView.setWebChromeClient(new WebChromeClient() {
+		  public boolean onConsoleMessage(ConsoleMessage cm) {
+		    Log.d("MyApplication", cm.message() + "\n -- From line "
+		                         + cm.lineNumber() + " of "
+		                         + cm.sourceId() );
+		    return true;
+		  }
+		});
         webView.loadUrl("file:///android_asset/index.html");
     }
 

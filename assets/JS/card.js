@@ -20,11 +20,12 @@ Card = function(value , suit, unit , pwidth, pheight) {
 
         this.hold = false;
 
-        this.on("mousedown", function(evt) {
+        this.on("pressup", function(evt) {
                 //this.card.hold = !this.card.hold;
 
                 if(buttonLabel.text == "Re Draw"){
-
+                    if(buttonTimer >= buttonTimeOut){
+                        buttonTimer=0;
                         this.hold = !this.hold;
 
                         if(this.hold){
@@ -33,6 +34,7 @@ Card = function(value , suit, unit , pwidth, pheight) {
                         else{
                              this.y = canvas.height * 0.75;   
                         }
+                    }
 
                 }
 
