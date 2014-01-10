@@ -81,19 +81,20 @@ function createSpriteSheets(){
     spriteSheets = {};
 
     spriteSheets["grantSpriteSheet"] = new createjs.SpriteSheet({
+        "images": [loader.getResult("grant")],
         "animations":
         {
             "run": [0, 25, "run"],
-            "attack": [26, 63, "run"]},
-            "images": [loader.getResult("grant")],
-            "frames":
-                {
-                    "height": 292.5,
-                    "width":165.75,
-                    "regX": 82.875,
-                    "regY": 292.5,
-                    "count": 64
-                }
+            "attack": [26, 63, "run"]
+        },
+        "frames":
+        {
+            "height": 292.5,
+            "width":165.75,
+            "regX": 82.875,
+            "regY": 292.5,
+            "count": 64
+        }
     });
 
 }

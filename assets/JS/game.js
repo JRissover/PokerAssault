@@ -2,11 +2,14 @@
 
 var UPS = 30;
 
+var date;
+var time;
+var timer;
+
 var deck;
 var hand;
 
-var mainButton;
-var buttonLabel;
+var mainButtonLabel;
 
 var background;
 var battleground;
@@ -17,12 +20,22 @@ var scrollAccel = 0;
 
 var units;
 var enemies;
+var reactionarySpawners;
+var timerSpawners;
+
 var updateID;
 
-function initGame() {
+var curLevel;
 
+function initGame(level) {
+
+    curLevel = level;
+    console.log(curLevel);
 
     stage.removeAllChildren();
+
+    date = new Date();
+    time = date.getTime();
 
     battleground = new createjs.Container();
     stage.addChild(battleground);
@@ -34,8 +47,8 @@ function initGame() {
     units = new Array();
     enemies = new Array();
 
-    background = new createjs.Bitmap(loader.getResult("landscape"));
-    background.scaleX = (canvas.width  * 3.0) / background.image.naturalWidth;
+    background = new createjs.Bitmap(loader.getResult(curLevel.background));
+    background.scaleX = (canvas.width  * curLevel.width) / background.image.naturalWidth;
     background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
     battleground.addChild(background);
 
@@ -56,9 +69,7 @@ function initGame() {
         scrollAccel = 0;
     });
 
-    
-
-    mainButton = new createjs.Shape();
+    var mainButton = new createjs.Shape();
     var g = mainButton.graphics;
     g.beginFill("#FFF");
     g.drawRoundRect(canvas.width * 0.775 , canvas.height * 0.75 , canvas.width  * 0.2 ,  canvas.height * 0.2 , 100 )
@@ -72,57 +83,86 @@ function initGame() {
         
     });
     
-    buttonLabel = new createjs.Text("Draw", "20px Arial", "#000");
-    buttonLabel.textAlign = "center";
-    buttonLabel.x = canvas.width  * 0.8725;
-    buttonLabel.y = canvas.height * 0.83;
-    stage.addChild(buttonLabel);
+    mainButtonLabel = new createjs.Text("Draw", "20px Arial", "#000");
+    mainButtonLabel.textAlign = "center";
+    mainButtonLabel.x = canvas.width  * 0.8725;
+    mainButtonLabel.y = canvas.height * 0.83;
+    stage.addChild(mainButtonLabel);
 
+    var quitButton = new createjs.Shape();
+    var g = quitButton.graphics;
+    g.beginFill("#FFF");
+    g.drawRoundRect(canvas.width * 0.9 , canvas.height * 0.0 , canvas.width  * 0.1 ,  canvas.height * 0.1 , 100 )
+    g.endFill();
+    stage.addChild(quitButton);
+
+    quitButton.on("mousedown", function(evt) {
+        if((touch && evt.pointerID == 0)|| !touch){
+            clearInterval(updateID);
+            initMenu();
+        }
+        
+    });
+
+    quitButtonLabel = new createjs.Text("Quit", "18px Arial", "#000");
+    quitButtonLabel.textAlign = "center";
+    quitButtonLabel.x = canvas.width  * 0.945;
+    quitButtonLabel.y = canvas.height * 0.03;
+    stage.addChild(quitButtonLabel);
+
+    for(var i = 0; i < curLevel.decorativeObjects.length; i++){
+        var dec = new createjs.Bitmap(loader.getResult(curLevel.decorativeObjects[i].image));
+        dec.scaleX = (canvas.width  * urLevel.decorativeObjects[i].pwidth ) / dec.image.naturalWidth;
+        dec.scaleY = (canvas.height * urLevel.decorativeObjects[i].pheight) / dec.image.naturalHeight;
+        dec.x = urLevel.decorativeObjects[i].x;
+        dec.y = urLevel.decorativeObjects[i].y;
+        stage.addChild(dec);
+    }
+
+    for(var i = 0; i < curLevel.stationaryUnits.length; i++){
+        //spriteSheet ,state , health , speed , damage , range , attackSpeed, pwidth , pheight
+        var u = new Unit( curLevel.stationaryUnits[i].sprite , curLevel.stationaryUnits[i].state,
+                            curLevel.stationaryUnits[i].health , 0 , curLevel.stationaryUnits[i].damage , 
+                            curLevel.stationaryUnits[i].range ,  curLevel.stationaryUnits[i].attackSpeed , 
+                            curLevel.stationaryUnits[i].pwidth , curLevel.stationaryUnits[i].pheight);
+        u.x = curLevel.stationaryUnits[i].x;
+        u.y = curLevel.stationaryUnits[i].y;
+        stage.addChild(u);
+    }
+
+    reactionarySpawners = [];
+    timerSpawners = [];
+
+    for(var i = 0; i < curLevel.spawners.length; i++){
+
+        if(curLevel.spawners[i].type == "reactionary"){
+            reactionarySpawners.push( curLevel.spawners[i] );
+        }
+        else if(curLevel.spawners[i].type == "timer"){
+            timerSpawners.push( curLevel.spawners[i] );
+        }
+        
+    }
 
     updateID = setInterval( update , 1000/UPS );
 }
 
+function spawnEnemyUnit(unitJSON , x , y){
+    //spawns unit from json
 
-/*
-function loadArrows(e){
+    var u = new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state , unitJSON.health , -unitJSON.speed , unitJSON.damage , 
+                     (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight);
+    u.x = x;
+    u.y = y;
 
-    leftArrow = new createjs.Bitmap(e.target);
-    rightArrow = new createjs.Bitmap(e.target);
-
-    rightArrow.scaleX = (canvas.width  * 0.075) / rightArrow.image.naturalWidth;
-    rightArrow.scaleY = (canvas.height * 0.5) / rightArrow.image.naturalHeight;
-
-    leftArrow.scaleX = -(canvas.width  * 0.075) / leftArrow.image.naturalWidth;
-    leftArrow.scaleY = (canvas.height * 0.5) / leftArrow.image.naturalHeight;
-
-    rightArrow.x = canvas.width  * 0.9;
-    rightArrow.y = canvas.height * 0.1;
-
-    leftArrow.x = canvas.width  * 0.1;
-    leftArrow.y = canvas.height * 0.1;
-
-    leftArrow.on("mousedown", function(evt) {
-       scroll = 5;
-    });
-    leftArrow.on("pressup", function(evt) {
-       scroll = 0;
-    });
-
-    rightArrow.on("mousedown", function(evt) {
-        scroll = -5;
-    });
-    rightArrow.on("pressup", function(evt) {
-        scroll = 0;
-    });
-
-    stage.addChild(rightArrow);
-    stage.addChild(leftArrow);
+    enemies.push(u);
+    battleground.addChild(u);
 }
-*/
+
 
 function mainButtonPress(){
     
-    if(buttonLabel.text == "Re Draw"){
+    if(mainButtonLabel.text == "Re Draw"){
         
         for(var i = 0; i < 5; i++){
             //console.log(hand[i])
@@ -133,7 +173,7 @@ function mainButtonPress(){
             }
             else{
 
-               //console.log( hand[i].suit+" "+hand[i].value+ " : "  + " not held");
+                //console.log( hand[i].suit+" "+hand[i].value+ " : "  + " not held");
 
                 stage.removeChild(hand[i]);
 
@@ -149,13 +189,12 @@ function mainButtonPress(){
                 hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
                 hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
 
-
             }
         }
 
-        buttonLabel.text = "Deploy";
+        mainButtonLabel.text = "Deploy";
     }
-    else if(buttonLabel.text == "Draw"){
+    else if(mainButtonLabel.text == "Draw"){
 
         hand = deck.draw(5);
 
@@ -174,9 +213,9 @@ function mainButtonPress(){
 
         }
 
-        buttonLabel.text = "Re Draw";
+        mainButtonLabel.text = "Re Draw";
     }
-    else if(buttonLabel.text == "Deploy"){
+    else if(mainButtonLabel.text == "Deploy"){
 
         spawnHand();
 
@@ -185,16 +224,15 @@ function mainButtonPress(){
             stage.removeChild(hand[i]);
         }
 
-        buttonLabel.text = "Draw";
+        mainButtonLabel.text = "Draw";
     }
     
     
 }
 
 function spawnHand(){
-    //console.log("spawning");
 
-    //sort hand
+    // sort hand
 
     var temphand = new Array();
 
@@ -234,10 +272,6 @@ function spawnHand(){
     }
     */
 
-    //console.log(hand);
-
-
-
     //check flush
 
     var flush = 1;
@@ -265,7 +299,7 @@ function spawnHand(){
 
 
     // algorithm to find streaks in the sorted hand. such as a pair or a full house.
-    // does this by itterating once adn counting streaks
+    // does this by itterating once and counting streaks
     //  can only have up to two streaks
 
     // stores information about streaks in thse variables
@@ -276,9 +310,7 @@ function spawnHand(){
     var last; // value that is streaking
 
     for(var i = 0; i <5; i++){
-
         var cur = hand[i].value;
-
         if(on == 1){
             if(last == cur){
                 lengthOne++;
@@ -292,16 +324,11 @@ function spawnHand(){
             if(last == cur){
                 lengthTwo++;
             }
-           
         }
         else{
-           
             lengthOne = 1;
             on = 1;
-           
-            
         }
-
         last = cur;
     }
 
@@ -326,38 +353,6 @@ function spawnHand(){
     else{
         console.log("high of " + hand[4].value);
     }
-
-    /*
-
-    // check 5 of a kind
-
-    if( hand[0].value == hand[1].value && hand[1].value == hand[2].value &&
-        hand[2].value == hand[3].value && hand[3].value == hand[4].value){
-        console.log("five of a kind");
-    }
-
-    // check 4 of a kind
-
-    if( (hand[0].value == hand[1].value && hand[1].value == hand[2].value && hand[2].value == hand[3].value)||
-        (hand[1].value == hand[2].value && hand[2].value == hand[3].value && hand[3].value == hand[4].value){
-        console.log("five of a kind");
-    }
-
-    //check fullhouse
-    if( hand[0].value == hand[1].value && hand[3].value == hand[4].value &&
-        ( (hand[1].value==hand[2].value) || (hand[2].value==hand[3].value) )){
-        console.log("fullhouse");
-    }
-
-    // check 3 of a kind
-
-    if( (hand[0].value == hand[1].value && hand[1].value == hand[2].value)||
-        (hand[2].value == hand[3].value && hand[3].value == hand[4].value){
-        console.log("five of a kind");
-    }
-    */
-
-
 
     var amount = lengthOne;
     if(lengthTwo >1){
@@ -390,17 +385,31 @@ function spawnHand(){
 
     // basic enemy opposition
     // temporary
-    var enemy = new Unit(spriteSheets["grantSpriteSheet"], "run", 3 , -1 , 1 , (canvas.width  * 0.075) , 1000);
-    enemy.scaleX = -enemy.scaleX;
-    enemy.y = canvas.height * 0.6;
-    enemy.x = canvas.height * 2;
 
-    battleground.addChild(enemy);
-    enemies.push(enemy);
+    for(var i = 0; i < reactionarySpawners.length; i++){
+        var curSpawner = reactionarySpawners[i];
+
+        for(var j = 0; j < reactionarySpawners[i].wave.length; j++){
+            var curSpawn = curSpawner.wave[j];
+            setTimeout( 
+                function(){
+                    spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
+                }
+                 , curSpawner.delay * j);
+        }
+        
+    }
 }
 
 
 function update(){
+
+    var oldTime = time;
+    time = date.getTime();
+
+    var dt = time - oldTime;
+
+    timer += dt;
 
     // adjusts scroll
 
@@ -432,6 +441,22 @@ function update(){
             scroll = 0;
         }
     }
+
+    for(var i = 0; i < timerSpawners.length; i++){
+        var curSpawner = timerSpawners[i];
+        if(timer % timerSpawners[i].timer == 0){
+            for(var j = 0; j < timerSpawners[i].wave.length; j++){
+                var curSpawn = curSpawner.wave[j];
+                setTimeout( 
+                    function(){
+                        spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
+                    }
+                 , curSpawner.delay * j);
+            }
+        }
+    }
+
+
 
     var inRange = false;
 
@@ -481,10 +506,6 @@ function update(){
         //console.log( units[i]);
     }
 
-    if(enemies.length == 0){
-        //clearInterval(updateID);
-        //initMenu();
-    }
    
     for(var i = 0; i < enemies.length; i++){
         // first check if dead
@@ -524,9 +545,6 @@ function update(){
                     enemies[i].x += enemies[i].speed;
                 }
             }
-            
         }
     }
-    
-    
 }

@@ -22,7 +22,7 @@ Card = function(value , suit, unit ) {
         this.on("pressup", function(evt) {
                 //this.card.hold = !this.card.hold;
 
-                if(buttonLabel.text == "Re Draw"){
+                if(mainButtonLabel.text == "Re Draw"){
 
                     if((touch && evt.pointerID == 0)|| !touch){
 

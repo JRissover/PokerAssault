@@ -60,7 +60,10 @@ function initMenu(){
     g.endFill();
     stage.addChild(startGameButton);
     startGameButton.on("mousedown", function(evt) {
-        initGame();
+        if((touch && evt.pointerID == 0)|| !touch){
+            initGame(levels[1]);
+        }
+        
     });
 
     var buttonLabel = new createjs.Text("Start Game", "30px Arial", "#000");
