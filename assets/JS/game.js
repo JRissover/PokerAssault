@@ -2,9 +2,8 @@
 
 var UPS = 30;
 
-var date;
 var time;
-var timer;
+var timers;
 
 var deck;
 var hand;
@@ -34,8 +33,8 @@ function initGame(level) {
 
     stage.removeAllChildren();
 
-    date = new Date();
-    time = date.getTime();
+    time = Date.now();
+    timers = [];
 
     battleground = new createjs.Container();
     stage.addChild(battleground);
@@ -140,6 +139,7 @@ function initGame(level) {
         }
         else if(curLevel.spawners[i].type == "timer"){
             timerSpawners.push( curLevel.spawners[i] );
+            timers.push(0);
         }
         
     }
@@ -405,11 +405,10 @@ function spawnHand(){
 function update(){
 
     var oldTime = time;
-    time = date.getTime();
-
+    time = Date.now();
     var dt = time - oldTime;
 
-    timer += dt;
+    
 
     // adjusts scroll
 
@@ -426,12 +425,12 @@ function update(){
             }
         }
         else{
-            if(battleground.x > - canvas.width  * 2.0){
-                if(battleground.x + scroll > - canvas.width  * 2.0){
+            if(battleground.x > - canvas.width  * (curLevel.width-1.0)){
+                if(battleground.x + scroll > - canvas.width  *(curLevel.width-1.0)){
                     battleground.x += scroll;
                 }
                 else{
-                    battleground.x = -canvas.width  * 2.0;
+                    battleground.x = -canvas.width  * (curLevel.width-1.0);
                     scroll = 0;
                 }
             }
@@ -443,8 +442,10 @@ function update(){
     }
 
     for(var i = 0; i < timerSpawners.length; i++){
+        timers[i] += dt;
         var curSpawner = timerSpawners[i];
-        if(timer % timerSpawners[i].timer == 0){
+        if(timers[i] >= timerSpawners[i].timer ){
+            timers[i] = 0;
             for(var j = 0; j < timerSpawners[i].wave.length; j++){
                 var curSpawn = curSpawner.wave[j];
                 setTimeout( 

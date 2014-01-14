@@ -78,11 +78,31 @@ levels[1] = {
             "x":2 , "y":0 , //position units are spawned at
             "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
-                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1000 ,  "speed" : 1 , 
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
                     "pwidth": 0.1 , "pheight":0.2 
-                },
+                }
+            ]
+        }
+    ]
+};
+
+levels[2] = {
+    "background": "landscape",
+
+    "width": 3.0, //lenght of level in screen pwidths
+
+    "decorativeObjects" : [],
+    "stationaryUnits" :   [],
+    "spawners" :
+    [ //spriteSheet ,state , health , speed , damage , range , attackSpeed, ppwidth , ppheight
+        
+        {   "type" : "timer", // spawns units evey so often
+            "timer" : 5000 , // frequency of unit spawns ms
+            "delay" : 500 , // time between untis in wave
+            "x":3 , "y":0 , //position units are spawned at
+            "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
-                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1000 ,  "speed" : 1 , 
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
                     "pwidth": 0.1 , "pheight":0.2 
                 }
             ]

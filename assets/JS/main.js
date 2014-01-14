@@ -61,7 +61,7 @@ function initMenu(){
     stage.addChild(startGameButton);
     startGameButton.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
-            initGame(levels[1]);
+            initGame(levels[2]);
         }
         
     });
