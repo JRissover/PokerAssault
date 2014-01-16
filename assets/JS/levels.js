@@ -65,7 +65,7 @@ levels[0] = {
 levels[1] = {
     "background": "landscape",
 
-    "width": 3.0, //lenght of level in screen pwidths
+    "width": 1.0, //lenght of level in screen pwidths
 
     "decorativeObjects" : [],
     "stationaryUnits" :   [],
@@ -75,7 +75,7 @@ levels[1] = {
         {   "type" : "reactionary", //reactionary spawners spawn in response to the player deploying
             "timer" : 0 , //does nothing for reactionary spawner
             "delay" : 500 , // time between untis in wave
-            "x":2 , "y":0 , //position units are spawned at
+            "x":1 , "y":0 , //position units are spawned at
             "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
                     "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
@@ -89,13 +89,47 @@ levels[1] = {
 levels[2] = {
     "background": "landscape",
 
-    "width": 3.0, //lenght of level in screen pwidths
+    "width": 2.0, //lenght of level in screen pwidths
 
     "decorativeObjects" : [],
     "stationaryUnits" :   [],
     "spawners" :
     [ //spriteSheet ,state , health , speed , damage , range , attackSpeed, ppwidth , ppheight
         
+        {   "type" : "timer", // spawns units evey so often
+            "timer" : 5000 , // frequency of unit spawns ms
+            "delay" : 500 , // time between untis in wave
+            "x":2 , "y":0 , //position units are spawned at
+            "wave" : [ // units are spawned in this order
+                { "sprite":"grantSpriteSheet" , "state": "run" ,
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
+                    "pwidth": 0.1 , "pheight":0.2 
+                }
+            ]
+        }
+    ]
+};
+
+levels[3] = {
+    "background": "landscape",
+
+    "width": 3.0, //lenght of level in screen pwidths
+
+    "decorativeObjects" : [],
+    "stationaryUnits" :   [],
+    "spawners" :
+    [ //spriteSheet ,state , health , speed , damage , range , attackSpeed, ppwidth , ppheight
+        {   "type" : "reactionary", //reactionary spawners spawn in response to the player deploying
+            "timer" : 0 , //does nothing for reactionary spawner
+            "delay" : 500 , // time between untis in wave
+            "x":3 , "y":0 , //position units are spawned at
+            "wave" : [ // units are spawned in this order
+                { "sprite":"grantSpriteSheet" , "state": "run" ,
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
+                    "pwidth": 0.1 , "pheight":0.2 
+                }
+            ]
+        },
         {   "type" : "timer", // spawns units evey so often
             "timer" : 5000 , // frequency of unit spawns ms
             "delay" : 500 , // time between untis in wave
@@ -109,4 +143,3 @@ levels[2] = {
         }
     ]
 };
-

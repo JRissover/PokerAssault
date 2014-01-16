@@ -6,6 +6,7 @@ function loadAssets(){
 
         {src:"resources/sprites/Landscape.jpg", id:"landscape"},
         {src:"resources/sprites/runningGrant.png", id:"grant"},
+        {src:"resources/sprites/arrow.png", id:"arrow"},
 
 
         // plaiyng cards
@@ -71,7 +72,7 @@ function loadAssets(){
     loader = new createjs.LoadQueue(false);
     loader.addEventListener("complete", function(){
         createSpriteSheets();
-        initMenu();
+        initMainMenu();
     });
     loader.loadManifest(manifest);
 }

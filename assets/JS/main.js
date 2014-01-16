@@ -17,6 +17,8 @@ var loader;
 
 var spriteSheets;
 
+var curLevel=1;
+
 init();
 
 function init() {
@@ -48,7 +50,7 @@ function init() {
     //draw();
 }
 
-function initMenu(){
+function initMainMenu(){
 
     stage.removeAllChildren();
 
@@ -61,7 +63,8 @@ function initMenu(){
     stage.addChild(startGameButton);
     startGameButton.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
-            initGame(levels[2]);
+            //initGame(levels[1]);
+            initLevelSelectMenu();
         }
         
     });
@@ -110,4 +113,111 @@ function initMenu(){
 
 }
 
+function initLevelSelectMenu(){
 
+    stage.removeAllChildren();
+
+    curLevel=1;
+
+    var back = new createjs.Shape();
+    var g = back.graphics;
+    g.beginFill("#FFF");
+    g.drawRoundRect(  canvas.width *0.05 ,  canvas.height *0.05 , canvas.width *0.9 , canvas.height * 0.9 , 100 );
+    g.endFill();
+    stage.addChild(back);
+
+    var quitButton = new createjs.Shape();
+    var g = quitButton.graphics;
+    g.beginFill("#F00");
+    g.drawRoundRect(canvas.width * 0.1 , canvas.height * 0.7 , canvas.width  * 0.3 ,  canvas.height * 0.2 , 100 )
+    g.endFill();
+    stage.addChild(quitButton);
+
+    quitButton.on("mousedown", function(evt) {
+        if((touch && evt.pointerID == 0)|| !touch){
+            initMainMenu();
+        }
+    });
+
+    var quitButtonLabel = new createjs.Text("Back", "40px Arial", "#000");
+    quitButtonLabel.textAlign = "center";
+    quitButtonLabel.x = canvas.width  * 0.24;
+    quitButtonLabel.y = canvas.height * 0.75;
+    stage.addChild(quitButtonLabel);
+
+    var startButton = new createjs.Shape();
+    var g = startButton.graphics;
+    g.beginFill("#0F0");
+    g.drawRoundRect(canvas.width * 0.6 , canvas.height * 0.7 , canvas.width  * 0.3 ,  canvas.height * 0.2 , 100 )
+    g.endFill();
+    stage.addChild(startButton);
+
+    startButton.on("mousedown", function(evt) {
+        if((touch && evt.pointerID == 0)|| !touch){
+            initGame(levels[curLevel]);
+        }
+    });
+
+    var startButtonLabel = new createjs.Text("Start", "40px Arial", "#000");
+    startButtonLabel.textAlign = "center";
+    startButtonLabel.x = canvas.width  * 0.75;
+    startButtonLabel.y = canvas.height * 0.75;
+    stage.addChild(startButtonLabel);
+
+    var levelLabel = new createjs.Text("Level 1", "40px Arial", "#000");
+    levelLabel.textAlign = "center";
+    levelLabel.x = canvas.width  * 0.5;
+    levelLabel.y = canvas.height * 0.1;
+    stage.addChild(levelLabel);
+
+    var levelPic = new createjs.Bitmap(loader.getResult(levels[curLevel].background));
+    levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+    levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+    levelPic.x = canvas.width * 0.25;
+    levelPic.y = canvas.height * 0.2;
+    stage.addChild(levelPic);
+
+
+
+    var arrowR = new createjs.Bitmap(loader.getResult("arrow"));
+    arrowR.scaleX = (canvas.width  * 0.1) / arrowR.image.naturalWidth;
+    arrowR.scaleY = (canvas.height * 0.5) / arrowR.image.naturalHeight;
+    arrowR.x = canvas.width * 0.825;
+    arrowR.y = canvas.height * 0.15;
+    stage.addChild(arrowR);
+
+    arrowR.on("mousedown", function(evt) {
+        if((touch && evt.pointerID == 0)|| !touch){
+            curLevel+=1;
+            if(curLevel >= levels.length){
+                curLevel = 1;
+            }
+            levelLabel.text = "Level " + curLevel;
+            levelPic.image = loader.getResult(levels[curLevel].background);
+            levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+            levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+        }
+    });
+
+    var arrowL = new createjs.Bitmap(loader.getResult("arrow"));
+    arrowL.scaleX = -(canvas.width  * 0.1) / arrowL.image.naturalWidth;
+    arrowL.scaleY = (canvas.height * 0.5) / arrowL.image.naturalHeight;
+    arrowL.x = canvas.width * 0.175;
+    arrowL.y = canvas.height * 0.15;
+    stage.addChild(arrowL);
+
+    arrowL.on("mousedown", function(evt) {
+        if((touch && evt.pointerID == 0)|| !touch){
+            curLevel-=1;
+            if(curLevel <= 0){
+                curLevel = levels.length -1;
+            }
+            levelLabel.text = "Level " + curLevel;
+            levelPic.image = loader.getResult(levels[curLevel].background);
+            levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+            levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+        }
+    });
+
+    
+}

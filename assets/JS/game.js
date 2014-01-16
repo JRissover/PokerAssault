@@ -29,7 +29,7 @@ var curLevel;
 function initGame(level) {
 
     curLevel = level;
-    console.log(curLevel);
+    //console.log(curLevel);
 
     stage.removeAllChildren();
 
@@ -98,7 +98,7 @@ function initGame(level) {
     quitButton.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
             clearInterval(updateID);
-            initMenu();
+            initMainMenu();
         }
         
     });
