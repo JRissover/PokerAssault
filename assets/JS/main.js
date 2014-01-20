@@ -19,7 +19,7 @@ var spriteSheets;
 
 var curLevel=1;
 
-var levelProgress = 3;
+var levelProgress = 1;
 
 init();
 
@@ -192,12 +192,21 @@ function initLevelSelectMenu(){
         if((touch && evt.pointerID == 0)|| !touch){
             curLevel+=1;
             if(curLevel > levelProgress){
-                curLevel = 1;
+                curLevel = 0;
             }
-            levelLabel.text = "Level " + curLevel;
-            levelPic.image = loader.getResult(levels[curLevel].background);
-            levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
-            levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+
+            if(curLevel == 0){
+                levelLabel.text = "Arcade Mode";
+                levelPic.image = loader.getResult("landscape");
+                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+            }
+            else{
+                levelLabel.text = "Level " + curLevel;
+                levelPic.image = loader.getResult(levels[curLevel].background);
+                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+            }
         }
     });
 
@@ -211,13 +220,21 @@ function initLevelSelectMenu(){
     arrowL.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
             curLevel-=1;
-            if(curLevel <= 0){
+            if(curLevel < 0){
                 curLevel = levelProgress;
             }
-            levelLabel.text = "Level " + curLevel;
-            levelPic.image = loader.getResult(levels[curLevel].background);
-            levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
-            levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+            if(curLevel == 0){
+                levelLabel.text = "Arcade Mode";
+                levelPic.image = loader.getResult("landscape");
+                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+            }
+            else{
+                levelLabel.text = "Level " + curLevel;
+                levelPic.image = loader.getResult(levels[curLevel].background);
+                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
+            }
         }
     });
 

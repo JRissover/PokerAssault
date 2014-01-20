@@ -16,6 +16,7 @@ var battleground;
 var scroll = 0;
 var lastPos = 0;
 var scrollAccel = 0;
+var levelWidth;
 
 var units;
 var enemies;
@@ -29,11 +30,12 @@ var updateID;
 
 var levelNumber;
 
+var arcade;
+
+
+
 
 function initGame(level) {
-    levelNumber = level;
-    curLevel = levels[level];
-    //console.log(curLevel);
 
     stage.removeAllChildren();
 
@@ -52,10 +54,76 @@ function initGame(level) {
     units = new Array();
     enemies = new Array();
 
-    background = new createjs.Bitmap(loader.getResult(curLevel.background));
-    background.scaleX = (canvas.width  * curLevel.width) / background.image.naturalWidth;
-    background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
-    battleground.addChild(background);
+    if(level == 0){
+        levelNumber = 0;
+        arcade = true;
+        curLevel = 1;
+
+        levelWidth = 2.0;
+
+
+        background = new createjs.Bitmap(loader.getResult("landscape"));
+        background.scaleX = (canvas.width  * levelWidth) / background.image.naturalWidth;
+        background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
+        battleground.addChild(background);
+
+        timers.push(0);
+        timers.push(0);
+        timers.push(1);
+    }
+    else{
+        levelNumber = level;
+        curLevel = levels[level];
+        arcade = false;
+
+        levelWidth = curLevel.width;
+
+        background = new createjs.Bitmap(loader.getResult(curLevel.background));
+        background.scaleX = (canvas.width  * levelWidth) / background.image.naturalWidth;
+        background.scaleY = (canvas.height * 0.7) / background.image.naturalHeight;
+        battleground.addChild(background);
+
+        for(var i = 0; i < curLevel.decorativeObjects.length; i++){
+            var dec = new createjs.Bitmap(loader.getResult(curLevel.decorativeObjects[i].image));
+            dec.scaleX = (canvas.width  * urLevel.decorativeObjects[i].pwidth ) / dec.image.naturalWidth;
+            dec.scaleY = (canvas.height * urLevel.decorativeObjects[i].pheight) / dec.image.naturalHeight;
+            dec.x = urLevel.decorativeObjects[i].x;
+            dec.y = urLevel.decorativeObjects[i].y;
+            stage.addChild(dec);
+        }
+
+        for(var i = 0; i < curLevel.stationaryUnits.length; i++){
+            //spriteSheet ,state , health , speed , damage , range , attackSpeed, pwidth , pheight
+            var u = new Unit( curLevel.stationaryUnits[i].sprite , curLevel.stationaryUnits[i].state,
+                                curLevel.stationaryUnits[i].health , 0 , curLevel.stationaryUnits[i].damage , 
+                                curLevel.stationaryUnits[i].range ,  curLevel.stationaryUnits[i].attackSpeed , 
+                                curLevel.stationaryUnits[i].pwidth , curLevel.stationaryUnits[i].pheight);
+            u.x = curLevel.stationaryUnits[i].x;
+            u.y = curLevel.stationaryUnits[i].y;
+            stage.addChild(u);
+        }
+
+        reactionarySpawners = [];
+        timerSpawners = [];
+
+        for(var i = 0; i < curLevel.spawners.length; i++){
+
+            if(curLevel.spawners[i].type == "reactionary"){
+                reactionarySpawners.push( curLevel.spawners[i] );
+            }
+            else if(curLevel.spawners[i].type == "timer"){
+                timerSpawners.push( curLevel.spawners[i] );
+                timers.push(0);
+            }
+            
+        }
+    }
+
+    
+    //console.log(curLevel);
+
+
+    
 
     background.on("pressmove", function(evt) {
 
@@ -115,40 +183,7 @@ function initGame(level) {
     quitButtonLabel.y = canvas.height * 0.03;
     stage.addChild(quitButtonLabel);
 
-    for(var i = 0; i < curLevel.decorativeObjects.length; i++){
-        var dec = new createjs.Bitmap(loader.getResult(curLevel.decorativeObjects[i].image));
-        dec.scaleX = (canvas.width  * urLevel.decorativeObjects[i].pwidth ) / dec.image.naturalWidth;
-        dec.scaleY = (canvas.height * urLevel.decorativeObjects[i].pheight) / dec.image.naturalHeight;
-        dec.x = urLevel.decorativeObjects[i].x;
-        dec.y = urLevel.decorativeObjects[i].y;
-        stage.addChild(dec);
-    }
-
-    for(var i = 0; i < curLevel.stationaryUnits.length; i++){
-        //spriteSheet ,state , health , speed , damage , range , attackSpeed, pwidth , pheight
-        var u = new Unit( curLevel.stationaryUnits[i].sprite , curLevel.stationaryUnits[i].state,
-                            curLevel.stationaryUnits[i].health , 0 , curLevel.stationaryUnits[i].damage , 
-                            curLevel.stationaryUnits[i].range ,  curLevel.stationaryUnits[i].attackSpeed , 
-                            curLevel.stationaryUnits[i].pwidth , curLevel.stationaryUnits[i].pheight);
-        u.x = curLevel.stationaryUnits[i].x;
-        u.y = curLevel.stationaryUnits[i].y;
-        stage.addChild(u);
-    }
-
-    reactionarySpawners = [];
-    timerSpawners = [];
-
-    for(var i = 0; i < curLevel.spawners.length; i++){
-
-        if(curLevel.spawners[i].type == "reactionary"){
-            reactionarySpawners.push( curLevel.spawners[i] );
-        }
-        else if(curLevel.spawners[i].type == "timer"){
-            timerSpawners.push( curLevel.spawners[i] );
-            timers.push(0);
-        }
-        
-    }
+    
 
     updateID = setInterval( update , 1000/UPS );
 }
@@ -389,23 +424,33 @@ function spawnHand(){
         }, 500*i);
     }
 
-    // basic enemy opposition
-    // temporary
+    if(arcade){
+        var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -((2*Math.random()) +1) , curLevel , 
+                 (canvas.width  *0.075) ,  1000 , -((0.1*Math.random()) +.05) , ((0.2*Math.random()) +.1));
+        enemy.x = canvas.width  *2.0;
+        enemy.y = canvas.height *0.6;
 
-    for(var i = 0; i < reactionarySpawners.length; i++){
-        var curSpawner = reactionarySpawners[i];
-        if(progress < canvas.width*curSpawner.x){
-            for(var j = 0; j < reactionarySpawners[i].wave.length; j++){
-                var curSpawn = curSpawner.wave[j];
-                setTimeout( 
-                    function(){
-                        spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
-                    }
-                     , curSpawner.delay * j);
-            }
-        }
-        
+        enemies.push(enemy);
+        battleground.addChild(enemy);
     }
+    else{
+        for(var i = 0; i < reactionarySpawners.length; i++){
+            var curSpawner = reactionarySpawners[i];
+            if(progress < canvas.width*curSpawner.x){
+                for(var j = 0; j < reactionarySpawners[i].wave.length; j++){
+                    var curSpawn = curSpawner.wave[j];
+                    setTimeout( 
+                        function(){
+                            spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
+                        }
+                         , curSpawner.delay * j);
+                }
+            }
+            
+        }
+    }
+
+    
 }
 
 
@@ -417,13 +462,7 @@ function update(){
 
     //console.log("progress: "+progress);
 
-    if(progress > canvas.width  *curLevel.width){
-        
-        if(levelNumber == levelProgress && levelProgress +1 <levels.length){
-            levelProgress +=1;
-        }
-        initLevelSelectMenu();   
-    }
+    
 
     // adjusts scroll
 
@@ -440,12 +479,12 @@ function update(){
             }
         }
         else{
-            if(battleground.x > - canvas.width  * (curLevel.width-1.0)){
-                if(battleground.x + scroll > - canvas.width  *(curLevel.width-1.0)){
+            if(battleground.x > - canvas.width  * (levelWidth-1.0)){
+                if(battleground.x + scroll > - canvas.width  *(levelWidth-1.0)){
                     battleground.x += scroll;
                 }
                 else{
-                    battleground.x = -canvas.width  * (curLevel.width-1.0);
+                    battleground.x = -canvas.width  * (levelWidth-1.0);
                     scroll = 0;
                 }
             }
@@ -456,21 +495,62 @@ function update(){
         }
     }
 
-    for(var i = 0; i < timerSpawners.length; i++){
-        timers[i] += dt;
-        var curSpawner = timerSpawners[i];
-        if(timers[i] >= timerSpawners[i].timer && progress < canvas.width*curSpawner.x){
-            timers[i] = 0;
-            for(var j = 0; j < timerSpawners[i].wave.length; j++){
-                var curSpawn = curSpawner.wave[j];
-                setTimeout( 
-                    function(){
-                        spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
-                    }
-                 , curSpawner.delay * j);
+    if(arcade){
+        timers[0] += dt;
+        timers[1] += dt;
+
+        if(timers[0] >= 5000 * curLevel){
+            curLevel +=1; // difficulty / level
+
+            if(curLevel % 10 == 0){
+                //every 10 levels spawnspeed goes up
+                timers[2] +=1
+            }
+            timers[0] = 0;
+        }
+
+        if(timers[1] >= 10000 / timers[2]){
+
+            var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -((2*Math.random()) +1) , curLevel , 
+                     (canvas.width  *0.075) ,  1000 , -((0.1*Math.random()) +.05) , ((0.2*Math.random()) +.1));
+            enemy.x = canvas.width  *2.0;
+            enemy.y = canvas.height *0.6;
+
+            enemies.push(enemy);
+            battleground.addChild(enemy);
+
+            timers[1] = 0;
+        }
+        
+    }
+    else{
+        if(progress > canvas.width  *levelWidth){
+            
+            if(levelNumber >= levelProgress && levelProgress +1 <levels.length){
+                levelProgress +=1;
+            }
+            clearInterval(updateID);
+            initLevelSelectMenu(); 
+        }
+
+        for(var i = 0; i < timerSpawners.length; i++){
+            timers[i] += dt;
+            var curSpawner = timerSpawners[i];
+            if(timers[i] >= timerSpawners[i].timer && progress < canvas.width*curSpawner.x){
+                timers[i] = 0;
+                for(var j = 0; j < timerSpawners[i].wave.length; j++){
+                    var curSpawn = curSpawner.wave[j];
+                    setTimeout( 
+                        function(){
+                            spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
+                        }
+                     , curSpawner.delay * j);
+                }
             }
         }
     }
+
+    
 
 
 
