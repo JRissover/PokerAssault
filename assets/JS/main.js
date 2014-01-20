@@ -19,6 +19,8 @@ var spriteSheets;
 
 var curLevel=1;
 
+var levelProgress = 3;
+
 init();
 
 function init() {
@@ -117,7 +119,7 @@ function initLevelSelectMenu(){
 
     stage.removeAllChildren();
 
-    curLevel=1;
+    curLevel=levelProgress;
 
     var back = new createjs.Shape();
     var g = back.graphics;
@@ -154,7 +156,7 @@ function initLevelSelectMenu(){
 
     startButton.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
-            initGame(levels[curLevel]);
+            initGame(curLevel);
         }
     });
 
@@ -164,7 +166,7 @@ function initLevelSelectMenu(){
     startButtonLabel.y = canvas.height * 0.75;
     stage.addChild(startButtonLabel);
 
-    var levelLabel = new createjs.Text("Level 1", "40px Arial", "#000");
+    var levelLabel = new createjs.Text("Level " + curLevel, "40px Arial", "#000");
     levelLabel.textAlign = "center";
     levelLabel.x = canvas.width  * 0.5;
     levelLabel.y = canvas.height * 0.1;
@@ -189,7 +191,7 @@ function initLevelSelectMenu(){
     arrowR.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
             curLevel+=1;
-            if(curLevel >= levels.length){
+            if(curLevel > levelProgress){
                 curLevel = 1;
             }
             levelLabel.text = "Level " + curLevel;
@@ -210,7 +212,7 @@ function initLevelSelectMenu(){
         if((touch && evt.pointerID == 0)|| !touch){
             curLevel-=1;
             if(curLevel <= 0){
-                curLevel = levels.length -1;
+                curLevel = levelProgress;
             }
             levelLabel.text = "Level " + curLevel;
             levelPic.image = loader.getResult(levels[curLevel].background);

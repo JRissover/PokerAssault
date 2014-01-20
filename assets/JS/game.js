@@ -19,22 +19,28 @@ var scrollAccel = 0;
 
 var units;
 var enemies;
+
+var progress = 0;
+
 var reactionarySpawners;
 var timerSpawners;
 
 var updateID;
 
-var curLevel;
+var levelNumber;
+
 
 function initGame(level) {
-
-    curLevel = level;
+    levelNumber = level;
+    curLevel = levels[level];
     //console.log(curLevel);
 
     stage.removeAllChildren();
 
     time = Date.now();
     timers = [];
+
+    progress = 0;
 
     battleground = new createjs.Container();
     stage.addChild(battleground);
@@ -388,14 +394,15 @@ function spawnHand(){
 
     for(var i = 0; i < reactionarySpawners.length; i++){
         var curSpawner = reactionarySpawners[i];
-
-        for(var j = 0; j < reactionarySpawners[i].wave.length; j++){
-            var curSpawn = curSpawner.wave[j];
-            setTimeout( 
-                function(){
-                    spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
-                }
-                 , curSpawner.delay * j);
+        if(progress < canvas.width*curSpawner.x){
+            for(var j = 0; j < reactionarySpawners[i].wave.length; j++){
+                var curSpawn = curSpawner.wave[j];
+                setTimeout( 
+                    function(){
+                        spawnEnemyUnit(curSpawn , canvas.width*curSpawner.x , canvas.height *0.6);
+                    }
+                     , curSpawner.delay * j);
+            }
         }
         
     }
@@ -408,7 +415,15 @@ function update(){
     time = Date.now();
     var dt = time - oldTime;
 
-    
+    //console.log("progress: "+progress);
+
+    if(progress > canvas.width  *curLevel.width){
+        
+        if(levelNumber == levelProgress && levelProgress +1 <levels.length){
+            levelProgress +=1;
+        }
+        initLevelSelectMenu();   
+    }
 
     // adjusts scroll
 
@@ -444,7 +459,7 @@ function update(){
     for(var i = 0; i < timerSpawners.length; i++){
         timers[i] += dt;
         var curSpawner = timerSpawners[i];
-        if(timers[i] >= timerSpawners[i].timer ){
+        if(timers[i] >= timerSpawners[i].timer && progress < canvas.width*curSpawner.x){
             timers[i] = 0;
             for(var j = 0; j < timerSpawners[i].wave.length; j++){
                 var curSpawn = curSpawner.wave[j];
@@ -499,6 +514,9 @@ function update(){
                 }
                 else{
                     units[i].x += units[i].speed;
+                    if(units[i].x > progress){
+                        progress = units[i].x;
+                    }
                 }
             }
         }
