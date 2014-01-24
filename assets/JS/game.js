@@ -20,6 +20,7 @@ var levelWidth;
 
 var units;
 var enemies;
+var projectiles;
 
 var progress = 0;
 
@@ -53,6 +54,7 @@ function initGame(level) {
     hand = new Array();
     units = new Array();
     enemies = new Array();
+    projectiles = new Array();
 
     if(level == 0){
         levelNumber = 0;
@@ -93,11 +95,26 @@ function initGame(level) {
         }
 
         for(var i = 0; i < curLevel.stationaryUnits.length; i++){
+            var u;
+            if(curLevel.stationaryUnits[i].attackType == "ranged"){
+                u= new Unit( curLevel.stationaryUnits[i].sprite , curLevel.stationaryUnits[i].state,
+                            curLevel.stationaryUnits[i].health , 0 , curLevel.stationaryUnits[i].damage , 
+                            curLevel.stationaryUnits[i].range ,  curLevel.stationaryUnits[i].attackSpeed , 
+                            curLevel.stationaryUnits[i].pwidth , curLevel.stationaryUnits[i].pheight,
+                            curLevel.stationaryUnits[i].attackType,
+                            new Projectile(loader.getResult(curLevel.stationaryUnits[i].projectile.image),
+                                        curLevel.stationaryUnits[i].projectile.type, curLevel.stationaryUnits[i].projectile.speed,
+                                        curLevel.stationaryUnits[i].projectile.pwidth , curLevel.stationaryUnits[i].projectile.pheight)
+                            );
+            }
+            else{
             //spriteSheet ,state , health , speed , damage , range , attackSpeed, pwidth , pheight
-            var u = new Unit( curLevel.stationaryUnits[i].sprite , curLevel.stationaryUnits[i].state,
-                                curLevel.stationaryUnits[i].health , 0 , curLevel.stationaryUnits[i].damage , 
-                                curLevel.stationaryUnits[i].range ,  curLevel.stationaryUnits[i].attackSpeed , 
-                                curLevel.stationaryUnits[i].pwidth , curLevel.stationaryUnits[i].pheight);
+                u= new Unit( curLevel.stationaryUnits[i].sprite , curLevel.stationaryUnits[i].state,
+                            curLevel.stationaryUnits[i].health , 0 , curLevel.stationaryUnits[i].damage , 
+                            curLevel.stationaryUnits[i].range ,  curLevel.stationaryUnits[i].attackSpeed , 
+                            curLevel.stationaryUnits[i].pwidth , curLevel.stationaryUnits[i].pheight, 
+                            curLevel.stationaryUnits[i].attackType);
+            }
             u.x = curLevel.stationaryUnits[i].x;
             u.y = curLevel.stationaryUnits[i].y;
             stage.addChild(u);
@@ -191,8 +208,22 @@ function initGame(level) {
 function spawnEnemyUnit(unitJSON , x , y){
     //spawns unit from json
 
-    var u = new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state , unitJSON.health , -unitJSON.speed , unitJSON.damage , 
-                     (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight);
+    var u;
+    if(unitJSON.attackType == "melee"){
+        u = new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state , unitJSON.health , -unitJSON.speed , unitJSON.damage , 
+                (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight, unitJSON.attackType);
+    }
+    else if(unitJSON.attackType == "ranged"){
+        
+         u= new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state, unitJSON.health , -unitJSON.speed , unitJSON.damage , 
+                (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight, unitJSON.attackType,
+                new Projectile(loader.getResult(unitJSON.projectile.image),
+                            unitJSON.projectile.type, -unitJSON.projectile.speed,
+                            -unitJSON.projectile.pwidth , unitJSON.projectile.pheight)
+                );
+    }
+
+    
     u.x = x;
     u.y = y;
 
@@ -402,7 +433,7 @@ function spawnHand(){
 
 
     var health = amount + (10*straight) + (10*flush); 
-    var speed = lengthOne + lengthTwo; 
+    var speed = 0.1; 
     var damage = lengthOne + lengthTwo + (10*straight) + (10*flush); 
     var range = (canvas.width  * 0.075);
     var attackSpeed = 1000;
@@ -550,100 +581,42 @@ function update(){
         }
     }
 
-    
-
-
-
     var inRange = false;
 
     for(var i = 0; i < units.length; i++){
 
-        // first check if dead
         if(units[i].health <= 0){
-            
             battleground.removeChild(units[i]);
             units.splice(i,1);
             i--;
         }
         else{
-
-            if(units[i].currentAnimation == "run"){
-
-                inRange = false;
-                var dx;
-                var target;
-                var min = 1000000; 
-                for(var j = 0; j < enemies.length; j++){
-                    dx = Math.abs(enemies[j].x -units[i].x);
-                    if(dx < units[i].range){
-                       inRange = true;
-                        if(dx < min){
-                            min = dx;
-                            target = enemies[j];
-                        }
-                    }
-                }
-
-                if(inRange){
-                    var attacker = units[i];
-                    
-                    units[i].gotoAndPlay("attack");
-                    setTimeout(function(){
-                        target.health -= attacker.damage;
-                    },units[i].attackSpeed);
-                }
-                else{
-                    units[i].x += units[i].speed;
-                    if(units[i].x > progress){
-                        progress = units[i].x;
-                    }
-                }
-            }
+            updatePlayerUnit(units[i],dt);
         }
-
-        
-        //console.log( units[i]);
     }
 
    
     for(var i = 0; i < enemies.length; i++){
-        // first check if dead
+
         if(enemies[i].health <= 0){
-            
             battleground.removeChild(enemies[i]);
             enemies.splice(i,1);
             i--;
         }
         else{
-            if(enemies[i].currentAnimation == "run"){
+            updateEnemyUnit(enemies[i],dt)
+        }
+    }
 
-                inRange = false;
-                var dx;
-                var target;
-                var min = 1000000;
-                for(var j = 0; j < units.length; j++){
-                    dx = Math.abs(units[j].x -enemies[i].x);
-                    if(dx < enemies[i].range){
-                        inRange = true;
-                        if(dx < min){
-                            min = dx;
-                            target = units[j];
-                        }
-                    }
-                }
+    for(var i = 0; i < projectiles.length; i++){
 
-                if(inRange){
-                    var attacker = enemies[i];
-                    
-                    enemies[i].gotoAndPlay("attack");
-                    setTimeout(function(){
-                        target.health -= attacker.damage;
-                    },enemies[i].attackSpeed);
-                }
-                else{
-                    enemies[i].x += enemies[i].speed;
-                }
-            }
+        if(projectiles[i].live){
+            updateProjectile(projectiles[i],dt);
+        }
+        else{
+            battleground.removeChild(projectiles[i]);
+            projectiles.splice(i,1);
+            i--;
         }
     }
 }

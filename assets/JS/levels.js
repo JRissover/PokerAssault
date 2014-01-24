@@ -18,11 +18,11 @@ levels[0] = {
     [ //spriteSheet ,state , health , speed , damage , range , attackSpeed, ppwidth , ppheight
         {   "sprite":"spritesheet" , "state": "idle" ,
             "health" : 1 , "damage" : 1 , "range" : 0.075 , "attackSpeed" : 1 , 
-            "x":0 , "y":0 , "pwidth":0 , "pheight":0 
+            "x":0 , "y":0 , "pwidth":0 , "pheight":0 , "attackType" : "melee"
         },
         {   "sprite":"spritesheet" , "state": "idle" ,
             "health" : 1 , "damage" : 1 , "range" : 0.075 , "attackSpeed" : 1 , 
-            "x":0 , "y":0 , "pwidth":0 , "pheight":0 
+            "x":0 , "y":0 , "pwidth":0 , "pheight":0 , "attackType" : "melee"
         }
     ],
     "spawners" :
@@ -35,11 +35,13 @@ levels[0] = {
             "wave" : [ // units are spawned in this order
                 { "sprite":"spritesheet" , "state": "run" ,
                     "health" : 1 , "damage" : 1 , "range" : 0.075 , "attackSpeed" : 1 , 
-                    "pwidth":0 , "pheight":0 
+                    "pwidth":0 , "pheight":0 , "attackType" : "melee"
                 },
                 { "sprite":"spritesheet" , "state": "run" ,
                     "health" : 1 , "damage" : 1 , "range" : 0.075 , "attackSpeed" : 1 , 
-                    "pwidth":0 , "pheight":0 
+                    "pwidth":0 , "pheight":0 , "attackType" : "ranged",
+                    "projectile": { "image": "imageID", "type" : "straight OR lob" , "speed" : 0.1 , 
+                                    "pwidth":0.05 , "pheight":0.05 }
                 }
             ]
         },
@@ -50,11 +52,11 @@ levels[0] = {
             "wave" : [ // units are spawned in this order
                 { "sprite":"spritesheet" , "state": "run" ,
                     "health" : 1 , "damage" : 1 , "range" : 0.075 , "attackSpeed" : 1 , "speed" : 1 , 
-                    "pwidth":0 , "pheight":0 
+                    "pwidth":0 , "pheight":0 , "attackType" : "melee"
                 },
                 { "sprite":"spritesheet" , "state": "run" ,
                     "health" : 1 , "damage" : 1 , "range" : 0.075 , "attackSpeed" : 1 , "speed" : 1 , 
-                    "pwidth":0 , "pheight":0 
+                    "pwidth":0 , "pheight":0 , "attackType" : "melee"
                 }
             ]
         }
@@ -78,8 +80,10 @@ levels[1] = {
             "x":1 , "y":0 , //position units are spawned at
             "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
-                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
-                    "pwidth": 0.1 , "pheight":0.2 
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 0.1 , 
+                    "pwidth": 0.1 , "pheight":0.2 , "attackType" : "ranged",
+                    "projectile": { "image": "arrow", "type" : "straight" , "speed" : 0.05 , 
+                                    "pwidth":0.05 , "pheight":0.05 }
                 }
             ]
         }
@@ -102,8 +106,8 @@ levels[2] = {
             "x":2 , "y":0 , //position units are spawned at
             "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
-                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
-                    "pwidth": 0.1 , "pheight":0.2 
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 0.1 , 
+                    "pwidth": 0.1 , "pheight":0.2 , "attackType" : "melee"
                 }
             ]
         }
@@ -125,8 +129,8 @@ levels[3] = {
             "x":3 , "y":0 , //position units are spawned at
             "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
-                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
-                    "pwidth": 0.1 , "pheight":0.2 
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 0.1 , 
+                    "pwidth": 0.1 , "pheight":0.2 , "attackType" : "melee"
                 }
             ]
         },
@@ -136,8 +140,8 @@ levels[3] = {
             "x":3 , "y":0 , //position units are spawned at
             "wave" : [ // units are spawned in this order
                 { "sprite":"grantSpriteSheet" , "state": "run" ,
-                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 2 , 
-                    "pwidth": 0.1 , "pheight":0.2 
+                    "health" : 1 , "damage" : 1 , "range" : 0.075  , "attackSpeed" : 1500 ,  "speed" : 0.1 , 
+                    "pwidth": 0.1 , "pheight":0.2 , "attackType" : "melee"
                 }
             ]
         }
