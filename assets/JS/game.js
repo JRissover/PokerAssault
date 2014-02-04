@@ -456,7 +456,7 @@ function spawnHand(){
     }
 
     if(arcade){
-        var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -((2*Math.random()) +1) , curLevel , 
+        var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -0.1, curLevel , 
                  (canvas.width  *0.075) ,  1000 , -((0.1*Math.random()) +.05) , ((0.2*Math.random()) +.1));
         enemy.x = canvas.width  *2.0;
         enemy.y = canvas.height *0.6;
@@ -542,7 +542,7 @@ function update(){
 
         if(timers[1] >= 10000 / timers[2]){
 
-            var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -((2*Math.random()) +1) , curLevel , 
+            var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -0.1 , curLevel , 
                      (canvas.width  *0.075) ,  1000 , -((0.1*Math.random()) +.05) , ((0.2*Math.random()) +.1));
             enemy.x = canvas.width  *2.0;
             enemy.y = canvas.height *0.6;

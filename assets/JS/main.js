@@ -57,13 +57,13 @@ function initMainMenu(){
     stage.removeAllChildren();
 
 
-    var startGameButton = new createjs.Shape();
-    var g = startGameButton.graphics;
+    var campaignButton = new createjs.Shape();
+    var g = campaignButton.graphics;
     g.beginFill("#FFF");
     g.drawRoundRect(canvas.width * 0.25 , canvas.height * 0.4 , canvas.width  * 0.5 ,  canvas.height * 0.1 , 100 )
     g.endFill();
-    stage.addChild(startGameButton);
-    startGameButton.on("mousedown", function(evt) {
+    stage.addChild(campaignButton);
+    campaignButton.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
             //initGame(levels[1]);
             initLevelSelectMenu();
@@ -71,29 +71,29 @@ function initMainMenu(){
         
     });
 
-    var buttonLabel = new createjs.Text("Start Game", "30px Arial", "#000");
-    buttonLabel.textAlign = "center";
-    buttonLabel.x = canvas.width  * 0.5;
-    buttonLabel.y = canvas.height * 0.425;
-    stage.addChild(buttonLabel);
+    var campaignButtonLabel = new createjs.Text("Campaign", "30px Arial", "#000");
+    campaignButtonLabel.textAlign = "center";
+    campaignButtonLabel.x = canvas.width  * 0.5;
+    campaignButtonLabel.y = canvas.height * 0.425;
+    stage.addChild(campaignButtonLabel);
 
 
 
-    var editDeckButton = new createjs.Shape();
-    var g = editDeckButton.graphics;
+    var arcadeModeButton = new createjs.Shape();
+    var g = arcadeModeButton.graphics;
     g.beginFill("#FFF");
     g.drawRoundRect(canvas.width * 0.25 , canvas.height * 0.6 , canvas.width  * 0.5 ,  canvas.height * 0.1 , 100 )
     g.endFill();
-    stage.addChild(editDeckButton);
-    editDeckButton.on("mousedown", function(evt) {
-        //console.log("todo deck editor");
+    stage.addChild(arcadeModeButton);
+    arcadeModeButton.on("mousedown", function(evt) {
+         initGame(0);
     });
 
-    var editDeckButtonLabel = new createjs.Text("Edit Deck", "30px Arial", "#000");
-    editDeckButtonLabel.textAlign = "center";
-    editDeckButtonLabel.x = canvas.width  * 0.5;
-    editDeckButtonLabel.y = canvas.height * 0.625;
-    stage.addChild(editDeckButtonLabel);
+    var arcadeModeButtonLabel = new createjs.Text("Arcade Mode", "30px Arial", "#000");
+    arcadeModeButtonLabel.textAlign = "center";
+    arcadeModeButtonLabel.x = canvas.width  * 0.5;
+    arcadeModeButtonLabel.y = canvas.height * 0.625;
+    stage.addChild(arcadeModeButtonLabel);
 
 
 
@@ -104,7 +104,7 @@ function initMainMenu(){
     g.endFill();
     stage.addChild(exitGameButton);
     exitGameButton.on("mousedown", function(evt) {
-        //console.log("todo exit button");
+        console.log("todo exit button");
     });
 
     var exitGameButtonLabel = new createjs.Text("Exit Game", "30px Arial", "#000");
@@ -192,7 +192,7 @@ function initLevelSelectMenu(){
         if((touch && evt.pointerID == 0)|| !touch){
             curLevel+=1;
             if(curLevel > levelProgress){
-                curLevel = 0;
+                curLevel = 1;
             }
 
             if(curLevel == 0){
@@ -220,7 +220,7 @@ function initLevelSelectMenu(){
     arrowL.on("mousedown", function(evt) {
         if((touch && evt.pointerID == 0)|| !touch){
             curLevel-=1;
-            if(curLevel < 0){
+            if(curLevel < 1){
                 curLevel = levelProgress;
             }
             if(curLevel == 0){
