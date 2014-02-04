@@ -194,19 +194,11 @@ function initLevelSelectMenu(){
             if(curLevel > levelProgress){
                 curLevel = 1;
             }
-
-            if(curLevel == 0){
-                levelLabel.text = "Arcade Mode";
-                levelPic.image = loader.getResult("landscape");
-                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
-                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
-            }
-            else{
-                levelLabel.text = "Level " + curLevel;
-                levelPic.image = loader.getResult(levels[curLevel].background);
-                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
-                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
-            }
+            
+            levelLabel.text = "Level " + curLevel;
+            levelPic.image = loader.getResult(levels[curLevel].background);
+            levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+            levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
         }
     });
 
@@ -223,18 +215,11 @@ function initLevelSelectMenu(){
             if(curLevel < 1){
                 curLevel = levelProgress;
             }
-            if(curLevel == 0){
-                levelLabel.text = "Arcade Mode";
-                levelPic.image = loader.getResult("landscape");
-                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
-                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
-            }
-            else{
-                levelLabel.text = "Level " + curLevel;
-                levelPic.image = loader.getResult(levels[curLevel].background);
-                levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
-                levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
-            }
+           
+            levelLabel.text = "Level " + curLevel;
+            levelPic.image = loader.getResult(levels[curLevel].background);
+            levelPic.scaleX = (canvas.width  * 0.5) / levelPic.image.naturalWidth;
+            levelPic.scaleY = (canvas.height * 0.4) / levelPic.image.naturalHeight;
         }
     });
 
