@@ -306,7 +306,7 @@ function spawnHand(){
 
     // sort hand
 
-    var temphand = new Array();
+    var temphand = [];
 
     for(var j = 0; j < 5; j++){
 
@@ -326,23 +326,8 @@ function spawnHand(){
 
     hand = temphand;
 
-    // optional redraw of sorted cards
-
-    /*
-    for(var i = 0; i < 5; i++){
-
-        stage.removeChild(hand[i]);
-
-
-
-        stage.addChild(hand[i]);
-
-        hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-        hand[i].y = canvas.height * 0.75;
-        hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
-        hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
-    }
-    */
+    var multipliers = [];
+    
 
     //check flush
 
@@ -353,10 +338,6 @@ function spawnHand(){
         }
     }
 
-    if(flush){
-        console.log("flush");
-    }
-
     //check straight
     var straight = 0;
 
@@ -365,7 +346,6 @@ function spawnHand(){
         hand[2].value + 2 == hand[4].value &&
         hand[3].value + 1 == hand[4].value){
 
-        console.log("straight");
         straight = 1;
     }
 
@@ -377,6 +357,7 @@ function spawnHand(){
     // stores information about streaks in thse variables
 
     var on = 0; // state that determines what streak we are on. 1,2 or 0
+    var end = 0;
     var lengthOne = 0; // length of first streak
     var lengthTwo = 0; // length of second streak
     var last; // value that is streaking
@@ -388,6 +369,7 @@ function spawnHand(){
                 lengthOne++;
             }
             else if(lengthOne > 1){
+                end = i;
                 lengthTwo = 1;
                 on = 2;
             }
@@ -403,27 +385,101 @@ function spawnHand(){
         }
         last = cur;
     }
+    var start = end - lengthOne;
 
-    if(lengthOne == 5){
-        console.log("5 of a Kind");
+    if(flush && straight && hand[0].value > 10){
+        console.log("royal flush");
+        for(var i = 0; i < 5; i++){
+            multipliers[i] = 5.0;
+        }
+    }
+    else if(flush && straight){
+        console.log("straight flush");
+        for(var i = 0; i < 5; i++){
+            multipliers[i] = 4.0;
+        }
     }
     else if(lengthOne == 4){
         console.log("4 of a Kind");
+        for(var i = 0; i < 5; i++){
+            multipliers[i] = 3.0;
+        }
     }
     else if( (lengthOne == 3 && lengthTwo == 2) || (lengthOne == 2 && lengthTwo == 3) ){
         console.log("Full House");
+        for(var i = 0; i < 5; i++){
+            multipliers[i] = 2.5;
+        }
+    }
+    else if(flush){
+        console.log("flush");
+        for(var i = 0; i < 5; i++){
+            multipliers[i] = 2.25;
+        }
+    }
+    else if(straight){
+        console.log("straight");
+        for(var i = 0; i < 5; i++){
+            multipliers[i] = 2.0;
+        }
     }
     else if(lengthOne == 3 || lengthTwo == 3){
         console.log("3 of a Kind");
+
+        for(var i = 0; i < 5; i++){
+            if (i >= start && i < end){
+                multipliers[i] = 1.5;
+            }
+            else{
+                multipliers[i] = 0.5;
+            }
+            
+        }
     }
     else if(lengthOne == 2 && lengthTwo == 2){
         console.log("2 pair");
+        if(hand[0].value == hand[1].value && hand[2].value == hand[3].value ){
+            multipliers[0] = 1.25;
+            multipliers[1] = 1.25;
+            multipliers[2] = 1.25;
+            multipliers[3] = 1.25;
+            multipliers[4] = 0.5;
+        }
+        else if(hand[1].value == hand[2].value && hand[3].value == hand[4].value ){
+            multipliers[0] = 0.5;
+            multipliers[1] = 1.25;
+            multipliers[2] = 1.25;
+            multipliers[3] = 1.25;
+            multipliers[4] = 1.25;
+
+        }
+        else if(hand[0].value == hand[1].value && hand[3].value == hand[4].value ){
+            multipliers[0] = 1.25;
+            multipliers[1] = 1.25;
+            multipliers[2] = 0.5;
+            multipliers[3] = 1.25;
+            multipliers[4] = 1.25;
+
+        }
     }
     else if(lengthOne == 2 || lengthTwo == 2){
         console.log("pair");
+        for(var i = 0; i < 5; i++){
+            if (i >= start && i < end){
+                multipliers[i] = 1.5;
+            }
+            else{
+                multipliers[i] = 0.5;
+            }
+            
+        }
     }
     else{
         console.log("high of " + hand[4].value);
+        for(var i = 0; i < 4; i++){
+            multipliers[i] = 0.5;
+        }
+        multipliers[4] = 0.75;
     }
 
     var amount = lengthOne;
@@ -431,7 +487,7 @@ function spawnHand(){
         amount += lengthTwo;
     }
 
-
+    /*
     var health = amount + (10*straight) + (10*flush); 
     var speed = 0.1; 
     var damage = lengthOne + lengthTwo + (10*straight) + (10*flush); 
@@ -439,22 +495,30 @@ function spawnHand(){
     var attackSpeed = 1000;
     var pwidth = 0.1 + (.1*straight) + (.1*flush); 
     var pheight= 0.2 + (.2*straight) + (.2*flush);
+    */
 
     //console.log("Amount = " + amount);
 
-    for(var i = 0; i < amount; i++){
-        setTimeout(function(){
-            //var unit = new Unit(hand[0].spawn.spriteSheet,"run",hand[0].spawn.health , hand[0].spawn.speed , hand[0].spawn.damage , hand[0].spawn.range, hand[0].spawn.attackSpeed, hand[0].spawn.pwidth , hand[0].spawn.pheight);
-            var unit = new Unit(hand[0].spawn.spriteSheet,"run",  health , speed , damage , range , attackSpeed, pwidth , pheight);
+    var n = 0;
+    for(var i = 0; i < 5; i++){
 
-            unit.y = canvas.height * 0.6;
-            unit.x = canvas.height * 0.1;
+        setTimeout(
+            function(){
+                var unit = new Unit(hand[n].spawn.spriteSheet,"run", 
+                        hand[n].spawn.health * multipliers[n] , hand[n].spawn.speed , hand[n].spawn.damage * multipliers[n] , 
+                        hand[n].spawn.range, hand[n].spawn.attackSpeed, hand[n].spawn.pwidth * multipliers[n] , hand[n].spawn.pheight * multipliers[n]);
+                //var unit = new Unit(hand[0].spawn.spriteSheet,"run",  health , speed , damage , range , attackSpeed, pwidth , pheight);
 
-            battleground.addChild(unit);
-            units.push(unit);
+                unit.y = canvas.height * 0.6;
+                unit.x = canvas.height * 0.1;
+
+                battleground.addChild(unit);
+                units.push(unit);
+                n+=1;
         }, 500*i);
     }
 
+    // enemy spawns in retalliation to player spawns
     if(arcade){
         var enemy = new Unit( spriteSheets["grantSpriteSheet"] , "run" , curLevel , -0.1, curLevel , 
                  (canvas.width  *0.075) ,  1000 , -((0.1*Math.random()) +.05) , ((0.2*Math.random()) +.1));

@@ -8,11 +8,15 @@ Card = function(value , suit, unit ) {
         //createjs.Bitmap.call( this , "resources/sprites/classicCards/"+suit+"/"+value+".png");
         createjs.Bitmap.call( this , loader.getResult(suit+" "+value));
 
-
-        this.value = value;
+        if(value ==1){
+            this.value = 14;
+        }
+        else{
+            this.value = value;
+        }
         this.suit = suit;
-
-        this.spawn = unit || new Unit(spriteSheets["grantSpriteSheet"], "run");
+        //Unit = function(spriteSheet ,state , health , speed , damage , range , attackSpeed, pwidth , pheight, attackType, projectile) {
+        this.spawn = unit || new Unit(spriteSheets["grantSpriteSheet"], "run" , this.value ,0.1, this.value);
 
 
         //this.spawn.regX = this.spawn.scaleX/2.0;
