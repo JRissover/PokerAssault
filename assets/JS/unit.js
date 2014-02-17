@@ -77,6 +77,10 @@ function updatePlayerUnit(unit,dt){
             if(unit.x > progress){
                 progress = unit.x;
             }
+            if(unit.x > canvas.width*levelWidth){
+                unit.health = 0;
+                score += 4 * unit.damage;
+            }
         }
     }
 }
@@ -122,6 +126,10 @@ function updateEnemyUnit(unit,dt){
         }
         else{
             unit.x += (canvas.width  *unit.speed) / dt;
+            if(unit.x < 0){
+                unit.health = 0;
+                score -= unit.damage;
+            }
         }
     }
 }

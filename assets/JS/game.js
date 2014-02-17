@@ -33,6 +33,9 @@ var levelNumber;
 
 var arcade;
 
+var score = 0;
+var scoreBoard;
+
 
 
 
@@ -136,11 +139,11 @@ function initGame(level) {
         }
     }
 
-    
-    //console.log(curLevel);
 
-
-    
+    scoreBoard = new createjs.Text("Score", "30px Arial", "#000");
+    scoreBoard.x = canvas.width  * 0.025;
+    scoreBoard.y = canvas.height * 0.025;
+    stage.addChild(scoreBoard);
 
     background.on("pressmove", function(evt) {
 
@@ -233,8 +236,30 @@ function spawnEnemyUnit(unitJSON , x , y){
 
 
 function mainButtonPress(){
-    
-    if(mainButtonLabel.text == "Re Draw"){
+
+    if(mainButtonLabel.text == "Draw"){
+        deck.shuffle();
+
+        hand = deck.draw(5);
+
+        for(var i = 0; i < 5; i++){
+
+
+            stage.addChild(hand[i]);
+
+            hand[i].hold = false;
+
+            hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
+            hand[i].y = canvas.height * 0.75;
+            hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
+            hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
+
+
+        }
+
+        mainButtonLabel.text = "Re Draw";
+    }
+    else  if(mainButtonLabel.text == "Re Draw"){
         
         for(var i = 0; i < 5; i++){
             //console.log(hand[i])
@@ -265,27 +290,6 @@ function mainButtonPress(){
         }
 
         mainButtonLabel.text = "Deploy";
-    }
-    else if(mainButtonLabel.text == "Draw"){
-
-        hand = deck.draw(5);
-
-        for(var i = 0; i < 5; i++){
-
-
-            stage.addChild(hand[i]);
-
-            hand[i].hold = false;
-
-            hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-            hand[i].y = canvas.height * 0.75;
-            hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
-            hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
-
-
-        }
-
-        mainButtonLabel.text = "Re Draw";
     }
     else if(mainButtonLabel.text == "Deploy"){
 
@@ -331,22 +335,23 @@ function spawnHand(){
 
     //check flush
 
-    var flush = 1;
+    var flush = true;
     for(var i = 1; i < 5; i++){
         if(hand[i].suit != hand[0].suit){
-            flush = 0;
+            flush = false;
         }
     }
 
     //check straight
-    var straight = 0;
+    var straight = false;
 
-    if( hand[0].value + 4 == hand[4].value &&
+    if((hand[0].value + 4 == hand[4].value &&
         hand[1].value + 3 == hand[4].value &&
         hand[2].value + 2 == hand[4].value &&
-        hand[3].value + 1 == hand[4].value){
-
-        straight = 1;
+        hand[3].value + 1 == hand[4].value) || 
+        (hand[4].value == 14 && hand[3].value == 5 && hand[2].value == 4 
+        && hand[1].value == 3  && hand[0].value == 2)){
+        straight = true;
     }
 
 
@@ -387,45 +392,53 @@ function spawnHand(){
     }
     var start = end - lengthOne;
 
+    var curScore = 0;
+
     if(flush && straight && hand[0].value > 10){
         console.log("royal flush");
         for(var i = 0; i < 5; i++){
             multipliers[i] = 5.0;
         }
+        curScore =  9;
     }
     else if(flush && straight){
         console.log("straight flush");
         for(var i = 0; i < 5; i++){
             multipliers[i] = 4.0;
         }
+        curScore =  8;
     }
     else if(lengthOne == 4){
         console.log("4 of a Kind");
         for(var i = 0; i < 5; i++){
             multipliers[i] = 3.0;
         }
+        curScore =  7;
     }
     else if( (lengthOne == 3 && lengthTwo == 2) || (lengthOne == 2 && lengthTwo == 3) ){
         console.log("Full House");
         for(var i = 0; i < 5; i++){
             multipliers[i] = 2.5;
         }
+        curScore =  6;
     }
     else if(flush){
         console.log("flush");
         for(var i = 0; i < 5; i++){
             multipliers[i] = 2.25;
         }
+        curScore =  5;
     }
     else if(straight){
         console.log("straight");
         for(var i = 0; i < 5; i++){
             multipliers[i] = 2.0;
         }
+        curScore =  4;
     }
     else if(lengthOne == 3 || lengthTwo == 3){
         console.log("3 of a Kind");
-
+        curScore =  3; 
         for(var i = 0; i < 5; i++){
             if (i >= start && i < end){
                 multipliers[i] = 1.5;
@@ -444,6 +457,7 @@ function spawnHand(){
             multipliers[2] = 1.25;
             multipliers[3] = 1.25;
             multipliers[4] = 0.5;
+            curScore =  2;
         }
         else if(hand[1].value == hand[2].value && hand[3].value == hand[4].value ){
             multipliers[0] = 0.5;
@@ -451,7 +465,7 @@ function spawnHand(){
             multipliers[2] = 1.25;
             multipliers[3] = 1.25;
             multipliers[4] = 1.25;
-
+            curScore =  2;
         }
         else if(hand[0].value == hand[1].value && hand[3].value == hand[4].value ){
             multipliers[0] = 1.25;
@@ -459,20 +473,21 @@ function spawnHand(){
             multipliers[2] = 0.5;
             multipliers[3] = 1.25;
             multipliers[4] = 1.25;
-
+            curScore =  2;
         }
     }
     else if(lengthOne == 2 || lengthTwo == 2){
         console.log("pair");
         for(var i = 0; i < 5; i++){
             if (i >= start && i < end){
-                multipliers[i] = 1.5;
+                multipliers[i] = 1.0;
             }
             else{
                 multipliers[i] = 0.5;
             }
             
         }
+        curScore =  1.0;
     }
     else{
         console.log("high of " + hand[4].value);
@@ -481,6 +496,8 @@ function spawnHand(){
         }
         multipliers[4] = 0.75;
     }
+    //console.log(curScore);
+    score += curScore;
 
     var amount = lengthOne;
     if(lengthTwo >1){
@@ -506,7 +523,9 @@ function spawnHand(){
             function(){
                 var unit = new Unit(hand[n].spawn.spriteSheet,"run", 
                         hand[n].spawn.health * multipliers[n] , hand[n].spawn.speed , hand[n].spawn.damage * multipliers[n] , 
-                        hand[n].spawn.range, hand[n].spawn.attackSpeed, hand[n].spawn.pwidth * multipliers[n] , hand[n].spawn.pheight * multipliers[n]);
+                        hand[n].spawn.range, hand[n].spawn.attackSpeed, 
+                        (hand[n].spawn.pwidth *0.5) + (hand[n].spawn.pwidth*0.75*multipliers[n]) , 
+                        (hand[n].spawn.pheight*0.5) + (hand[n].spawn.pwidth*0.75*multipliers[n]));
                 //var unit = new Unit(hand[0].spawn.spriteSheet,"run",  health , speed , damage , range , attackSpeed, pwidth , pheight);
 
                 unit.y = canvas.height * 0.6;
@@ -554,6 +573,8 @@ function update(){
     var oldTime = time;
     time = Date.now();
     var dt = time - oldTime;
+
+    scoreBoard.text = score;
 
     //console.log("progress: "+progress);
 
