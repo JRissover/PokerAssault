@@ -35,6 +35,8 @@ var arcade;
 
 var score = 0;
 var scoreBoard;
+var life = 10;
+var lifeCounter;
 
 
 
@@ -63,6 +65,7 @@ function initGame(level) {
         levelNumber = 0;
         arcade = true;
         curLevel = 1;
+        score = 0;
 
         levelWidth = 2.0;
 
@@ -80,6 +83,7 @@ function initGame(level) {
         levelNumber = level;
         curLevel = levels[level];
         arcade = false;
+        score = curLevel.health;
 
         levelWidth = curLevel.width;
 
@@ -140,10 +144,16 @@ function initGame(level) {
     }
 
 
-    scoreBoard = new createjs.Text("Score", "30px Arial", "#000");
-    scoreBoard.x = canvas.width  * 0.025;
-    scoreBoard.y = canvas.height * 0.025;
+    scoreBoard = new createjs.Text("Score : ", "30px Arial", "#000");
+    scoreBoard.x = canvas.width  * 0.01;
+    scoreBoard.y = canvas.height * 0.01;
     stage.addChild(scoreBoard);
+
+    life = 10;
+    lifeCounter = new createjs.Text("Life : ", "30px Arial", "#000");
+    lifeCounter.x = canvas.width  * 0.01;
+    lifeCounter.y = canvas.height * 0.04;
+    stage.addChild(lifeCounter);
 
     background.on("pressmove", function(evt) {
 
@@ -497,7 +507,9 @@ function spawnHand(){
         multipliers[4] = 0.75;
     }
     //console.log(curScore);
-    score += curScore;
+    if(arcade){
+        score += curScore;
+    }
 
     var amount = lengthOne;
     if(lengthTwo >1){
@@ -574,7 +586,13 @@ function update(){
     time = Date.now();
     var dt = time - oldTime;
 
-    scoreBoard.text = score;
+    if(arcade){
+        scoreBoard.text = "Score : "+score;
+    }
+    else{
+        scoreBoard.text = "Siege : "+score;
+    }
+    lifeCounter.text =    "Life : "+life;
 
     //console.log("progress: "+progress);
 
@@ -640,7 +658,7 @@ function update(){
         
     }
     else{
-        if(progress > canvas.width  *levelWidth){
+        if(score <=0){
             
             if(levelNumber >= levelProgress && levelProgress +1 <levels.length){
                 levelProgress +=1;

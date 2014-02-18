@@ -79,7 +79,13 @@ function updatePlayerUnit(unit,dt){
             }
             if(unit.x > canvas.width*levelWidth){
                 unit.health = 0;
-                score += 4 * unit.damage;
+                if(arcade){
+                    score += 4 * unit.damage;
+                }
+                else{
+                    score -= unit.damage;
+                }
+                
             }
         }
     }
@@ -128,7 +134,7 @@ function updateEnemyUnit(unit,dt){
             unit.x += (canvas.width  *unit.speed) / dt;
             if(unit.x < 0){
                 unit.health = 0;
-                score -= unit.damage;
+                life -= unit.damage;
             }
         }
     }

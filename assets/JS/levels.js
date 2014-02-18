@@ -67,6 +67,8 @@ levels[0] = {
 levels[1] = {
     "background": "landscape",
 
+    "health": 25,
+
     "width": 1.0, //lenght of level in screen pwidths
 
     "decorativeObjects" : [],
@@ -93,6 +95,8 @@ levels[1] = {
 levels[2] = {
     "background": "landscape",
 
+    "health": 50,
+
     "width": 2.0, //lenght of level in screen pwidths
 
     "decorativeObjects" : [],
@@ -116,6 +120,8 @@ levels[2] = {
 
 levels[3] = {
     "background": "landscape",
+
+    "health": 100,
 
     "width": 3.0, //lenght of level in screen pwidths
 
