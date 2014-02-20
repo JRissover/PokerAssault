@@ -7,6 +7,8 @@ levels[0] = {
 
     "background": "image ID",
 
+    "health": 25, // damage required to beat level.
+
     "length": 1.5, //lenght of level in screen pwidths
 
     "decorativeObjects" : // to be made into bitmaps

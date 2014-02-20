@@ -140,3 +140,29 @@ function updateEnemyUnit(unit,dt){
     }
 }
 
+function spawnEnemyUnit(unitJSON , x , y){
+    //spawns unit from json
+
+    var u;
+    if(unitJSON.attackType == "melee"){
+        u = new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state , unitJSON.health , -unitJSON.speed , unitJSON.damage , 
+                (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight, unitJSON.attackType);
+    }
+    else if(unitJSON.attackType == "ranged"){
+        
+         u= new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state, unitJSON.health , -unitJSON.speed , unitJSON.damage , 
+                (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight, unitJSON.attackType,
+                new Projectile(loader.getResult(unitJSON.projectile.image),
+                            unitJSON.projectile.type, -unitJSON.projectile.speed,
+                            -unitJSON.projectile.pwidth , unitJSON.projectile.pheight)
+                );
+    }
+
+    
+    u.x = x;
+    u.y = y;
+
+    enemies.push(u);
+    battleground.addChild(u);
+}
+

@@ -37,8 +37,8 @@ var score = 0;
 var scoreBoard;
 var life = 10;
 var lifeCounter;
-
-
+var deployments = 0;
+var deploymentTimer = 0;
 
 
 function initGame(level) {
@@ -49,6 +49,8 @@ function initGame(level) {
     timers = [];
 
     progress = 0;
+    deployments = 1;
+    deploymentTimer =0
 
     battleground = new createjs.Container();
     stage.addChild(battleground);
@@ -218,32 +220,6 @@ function initGame(level) {
     updateID = setInterval( update , 1000/UPS );
 }
 
-function spawnEnemyUnit(unitJSON , x , y){
-    //spawns unit from json
-
-    var u;
-    if(unitJSON.attackType == "melee"){
-        u = new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state , unitJSON.health , -unitJSON.speed , unitJSON.damage , 
-                (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight, unitJSON.attackType);
-    }
-    else if(unitJSON.attackType == "ranged"){
-        
-         u= new Unit( spriteSheets[unitJSON.sprite] , unitJSON.state, unitJSON.health , -unitJSON.speed , unitJSON.damage , 
-                (canvas.width  *unitJSON.range) ,  unitJSON.attackSpeed , -unitJSON.pwidth , unitJSON.pheight, unitJSON.attackType,
-                new Projectile(loader.getResult(unitJSON.projectile.image),
-                            unitJSON.projectile.type, -unitJSON.projectile.speed,
-                            -unitJSON.projectile.pwidth , unitJSON.projectile.pheight)
-                );
-    }
-
-    
-    u.x = x;
-    u.y = y;
-
-    enemies.push(u);
-    battleground.addChild(u);
-}
-
 
 function mainButtonPress(){
 
@@ -303,14 +279,19 @@ function mainButtonPress(){
     }
     else if(mainButtonLabel.text == "Deploy"){
 
-        spawnHand();
+        if(deployments > 0){
 
-        for(var i = 0; i < 5; i++){
-            
-            stage.removeChild(hand[i]);
+            deployments-=1;
+
+            spawnHand();
+
+            for(var i = 0; i < 5; i++){
+                
+                stage.removeChild(hand[i]);
+            }
+
+            mainButtonLabel.text = "Draw";
         }
-
-        mainButtonLabel.text = "Draw";
     }
     
     
@@ -585,6 +566,16 @@ function update(){
     var oldTime = time;
     time = Date.now();
     var dt = time - oldTime;
+    deploymentTimer += dt;
+
+    //controls how often you can deploy units
+    // max 5 waves at a time, you get a new one every 2 seconds.
+    if(deploymentTimer > 2000){
+        if(deployments < 5){
+            deployments +=1;
+        }
+        deploymentTimer=0;
+    }
 
     if(arcade){
         scoreBoard.text = "Score : "+score;
