@@ -653,6 +653,7 @@ function update(){
             
             if(levelNumber >= levelProgress && levelProgress +1 <levels.length){
                 levelProgress +=1;
+                window.localStorage["save"] = levelProgress;
             }
             clearInterval(updateID);
             initLevelSelectMenu(); 

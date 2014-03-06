@@ -47,6 +47,9 @@ function init() {
 
     
     loadAssets();
+    if(window.localStorage.getItem("save")){
+       levelProgress = window.localStorage["save"];
+    }
     
     setInterval( function() { stage.update();   } , 1000/FPS ); 
     //draw();

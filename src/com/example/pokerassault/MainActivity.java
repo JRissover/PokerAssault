@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
         wSettings = webView.getSettings();
         wSettings.setJavaScriptEnabled(true);
         wSettings.setAllowContentAccess(true);
+        wSettings.setDomStorageEnabled(true);
         wSettings.setAllowUniversalAccessFromFileURLs(true);
          
         webView.setWebChromeClient(new WebChromeClient() {
