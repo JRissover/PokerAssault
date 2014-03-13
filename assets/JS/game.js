@@ -45,6 +45,13 @@ function initGame(level) {
 
     stage.removeAllChildren();
 
+    var backColor = new createjs.Shape();
+    var g = backColor.graphics;
+    g.beginFill("#100");
+    g.drawRect(0 , 0 , canvas.width ,  canvas.height)
+    g.endFill();
+    stage.addChild(backColor);
+
     time = Date.now();
     timers = [];
 
@@ -235,10 +242,10 @@ function mainButtonPress(){
 
             hand[i].hold = false;
 
-            hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-            hand[i].y = canvas.height * 0.75;
-            hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
-            hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
+            hand[i].x = (canvas.width * 0.075) + (canvas.width * .15 * i);
+            hand[i].y = canvas.height * 0.85;
+            hand[i].scaleX = (canvas.width  * 0.1) / spriteSheets["CardSheet"]._frameWidth;
+            hand[i].scaleY = (canvas.height * 0.2) / spriteSheets["CardSheet"]._frameHeight;
 
 
         }
@@ -251,7 +258,7 @@ function mainButtonPress(){
             //console.log(hand[i])
 
             if(hand[i].hold){
-                hand[i].y = canvas.height * 0.75;
+                hand[i].y = canvas.height * 0.85;
                 //console.log( hand[i].suit+" "+hand[i].value+ " : "  + " held");
             }
             else{
@@ -267,10 +274,10 @@ function mainButtonPress(){
 
                 stage.addChild(hand[i]);
 
-                hand[i].x = (canvas.width * 0.05) + (canvas.width * .15 * i);
-                hand[i].y = canvas.height * 0.75;
-                hand[i].scaleX = (canvas.width  * 0.1) / hand[i].image.naturalWidth;
-                hand[i].scaleY = (canvas.height * 0.2) / hand[i].image.naturalHeight;
+                hand[i].x = (canvas.width * 0.075) + (canvas.width * .15 * i);
+                hand[i].y = canvas.height * 0.85;
+                hand[i].scaleX = (canvas.width  * 0.1) / spriteSheets["CardSheet"]._frameWidth;
+                hand[i].scaleY = (canvas.height * 0.2) / spriteSheets["CardSheet"]._frameHeight;
 
             }
         }

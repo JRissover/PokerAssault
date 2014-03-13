@@ -42,9 +42,9 @@ Deck.prototype = {
 			for(var i = 0; i < amount; i++){
 
 				hand.push(this.cards[this.order.pop()])
-
+				//hand.push(this.cards[i +26  +10])
 			}
-			//console.log(hand[0]);
+			//console.log(hand);
 
 			return hand;
 		}
@@ -78,61 +78,61 @@ Deck.prototype = {
 
 		this.cards = new Array();
 
-		this.cards.push(new Card(1, "Clubs"));
-		this.cards.push(new Card(2, "Clubs"));
-		this.cards.push(new Card(3, "Clubs"));
-		this.cards.push(new Card(4, "Clubs"));
-		this.cards.push(new Card(5, "Clubs"));
-		this.cards.push(new Card(6, "Clubs"));
-		this.cards.push(new Card(7, "Clubs"));
-		this.cards.push(new Card(8, "Clubs"));
-		this.cards.push(new Card(9, "Clubs"));
-		this.cards.push(new Card(10,"Clubs"));
-		this.cards.push(new Card(11,"Clubs"));
-		this.cards.push(new Card(12,"Clubs"));
-		this.cards.push(new Card(13,"Clubs"));
+		this.cards.push(new Card(1, "Red"));
+		this.cards.push(new Card(2, "Red"));
+		this.cards.push(new Card(3, "Red"));
+		this.cards.push(new Card(4, "Red"));
+		this.cards.push(new Card(5, "Red"));
+		this.cards.push(new Card(6, "Red"));
+		this.cards.push(new Card(7, "Red"));
+		this.cards.push(new Card(8, "Red"));
+		this.cards.push(new Card(9, "Red"));
+		this.cards.push(new Card(10,"Red"));
+		this.cards.push(new Card(11,"Red"));
+		this.cards.push(new Card(12,"Red"));
+		this.cards.push(new Card(13,"Red"));
 
-		this.cards.push(new Card(1, "Spades"));
-		this.cards.push(new Card(2, "Spades"));
-		this.cards.push(new Card(3, "Spades"));
-		this.cards.push(new Card(4, "Spades"));
-		this.cards.push(new Card(5, "Spades"));
-		this.cards.push(new Card(6, "Spades"));
-		this.cards.push(new Card(7, "Spades"));
-		this.cards.push(new Card(8, "Spades"));
-		this.cards.push(new Card(9, "Spades"));
-		this.cards.push(new Card(10,"Spades"));
-		this.cards.push(new Card(11,"Spades"));
-		this.cards.push(new Card(12,"Spades"));
-		this.cards.push(new Card(13,"Spades"));
+		this.cards.push(new Card(1, "Green"));
+		this.cards.push(new Card(2, "Green"));
+		this.cards.push(new Card(3, "Green"));
+		this.cards.push(new Card(4, "Green"));
+		this.cards.push(new Card(5, "Green"));
+		this.cards.push(new Card(6, "Green"));
+		this.cards.push(new Card(7, "Green"));
+		this.cards.push(new Card(8, "Green"));
+		this.cards.push(new Card(9, "Green"));
+		this.cards.push(new Card(10,"Green"));
+		this.cards.push(new Card(11,"Green"));
+		this.cards.push(new Card(12,"Green"));
+		this.cards.push(new Card(13,"Green"));
 
-		this.cards.push(new Card(1, "Hearts"));
-		this.cards.push(new Card(2, "Hearts"));
-		this.cards.push(new Card(3, "Hearts"));
-		this.cards.push(new Card(4, "Hearts"));
-		this.cards.push(new Card(5, "Hearts"));
-		this.cards.push(new Card(6, "Hearts"));
-		this.cards.push(new Card(7, "Hearts"));
-		this.cards.push(new Card(8, "Hearts"));
-		this.cards.push(new Card(9, "Hearts"));
-		this.cards.push(new Card(10,"Hearts"))
-		this.cards.push(new Card(11,"Hearts"));
-		this.cards.push(new Card(12,"Hearts"));
-		this.cards.push(new Card(13,"Hearts"));
+		this.cards.push(new Card(1, "Blue"));
+		this.cards.push(new Card(2, "Blue"));
+		this.cards.push(new Card(3, "Blue"));
+		this.cards.push(new Card(4, "Blue"));
+		this.cards.push(new Card(5, "Blue"));
+		this.cards.push(new Card(6, "Blue"));
+		this.cards.push(new Card(7, "Blue"));
+		this.cards.push(new Card(8, "Blue"));
+		this.cards.push(new Card(9, "Blue"));
+		this.cards.push(new Card(10,"Blue"))
+		this.cards.push(new Card(11,"Blue"));
+		this.cards.push(new Card(12,"Blue"));
+		this.cards.push(new Card(13,"Blue"));
 
-		this.cards.push(new Card(1, "Diamonds"));
-		this.cards.push(new Card(2, "Diamonds"));
-		this.cards.push(new Card(3, "Diamonds"));
-		this.cards.push(new Card(4, "Diamonds"));
-		this.cards.push(new Card(5, "Diamonds"));
-		this.cards.push(new Card(6, "Diamonds"));
-		this.cards.push(new Card(7, "Diamonds"));
-		this.cards.push(new Card(8, "Diamonds"));
-		this.cards.push(new Card(9, "Diamonds"));
-		this.cards.push(new Card(10,"Diamonds"));
-		this.cards.push(new Card(11,"Diamonds"));
-		this.cards.push(new Card(12,"Diamonds"));
-		this.cards.push(new Card(13,"Diamonds"));
+		this.cards.push(new Card(1, "Black"));
+		this.cards.push(new Card(2, "Black"));
+		this.cards.push(new Card(3, "Black"));
+		this.cards.push(new Card(4, "Black"));
+		this.cards.push(new Card(5, "Black"));
+		this.cards.push(new Card(6, "Black"));
+		this.cards.push(new Card(7, "Black"));
+		this.cards.push(new Card(8, "Black"));
+		this.cards.push(new Card(9, "Black"));
+		this.cards.push(new Card(10,"Black"));
+		this.cards.push(new Card(11,"Black"));
+		this.cards.push(new Card(12,"Black"));
+		this.cards.push(new Card(13,"Black"));
 
 		
 

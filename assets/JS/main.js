@@ -32,6 +32,7 @@ function init() {
     canvas.style.left = '0px';
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth ;
+    canvas.bac
 
     stage = new createjs.Stage(canvas);
 
@@ -58,6 +59,13 @@ function init() {
 function initMainMenu(){
 
     stage.removeAllChildren();
+
+    var backColor = new createjs.Shape();
+    var g = backColor.graphics;
+    g.beginFill("#100");
+    g.drawRect(0 , 0 , canvas.width ,  canvas.height)
+    g.endFill();
+    stage.addChild(backColor);
 
 
     var campaignButton = new createjs.Shape();
