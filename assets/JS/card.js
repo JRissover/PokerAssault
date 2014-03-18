@@ -17,26 +17,30 @@ Card = function(value , suit, unit ) {
         var frameIndex = 0 ;
         if(suit == "Red"){
             frameIndex = this.value - 1;
+            this.spawn = unit || new Unit(spriteSheets["redSpriteSheet"], "run" , this.value ,0.1, this.value);
         }
         else if(suit == "Green"){
             frameIndex = 13 +  this.value - 1;
+            this.spawn = unit || new Unit(spriteSheets["greenSpriteSheet"], "run" , this.value ,0.1, this.value);
         }
         else if(suit == "Blue"){
             frameIndex = 26 +  this.value - 1;
+            this.spawn = unit || new Unit(spriteSheets["blueSpriteSheet"], "run" , this.value ,0.1, this.value);
         }
         else if(suit == "Black"){
             frameIndex = 39 +  this.value - 1;
+            this.spawn = unit || new Unit(spriteSheets["blackSpriteSheet"], "run" , this.value ,0.1, this.value);
         }
 
 
-        console.log(frameIndex);
+        //console.log(frameIndex);
 
         this.gotoAndStop(frameIndex);  
 
         
         this.suit = suit;
         //Unit = function(spriteSheet ,state , health , speed , damage , range , attackSpeed, pwidth , pheight, attackType, projectile) {
-        this.spawn = unit || new Unit(spriteSheets["grantSpriteSheet"], "run" , this.value ,0.1, this.value);
+        
 
 
         //this.spawn.regX = this.spawn.scaleX/2.0;
